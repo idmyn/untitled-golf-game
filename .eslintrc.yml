@@ -4,6 +4,8 @@ env:
 extends: 'eslint:recommended'
 parserOptions:
   ecmaVersion: 6
+globals:
+  io: readonly
 rules:
   indent:
     - error
