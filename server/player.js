@@ -16,9 +16,7 @@ function Player(socket, ball) {
 
 Player.all = {}
 
-// ground should only be created once (on server start?)
 Player.onConnect = (socket, game) => {
- // const ball = Matter.Bodies.circle(300, 300, 15)
   const ball = game.createBall()
   const player = new Player(socket, ball)
 
@@ -27,5 +25,3 @@ Player.onConnect = (socket, game) => {
     game.mouseClicked(ball, packet)
   })
 }
-
-

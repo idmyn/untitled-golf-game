@@ -36,7 +36,7 @@ function Game() {
 
   this.run = () => {
     setInterval(() => {
-      
+
       const pack = []
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
@@ -46,8 +46,6 @@ function Game() {
       }
       sendPackets(pack)
     }, 1000/25)
-
-
 
     function sendPackets(pack){
       for(const playerId in Player.all){
@@ -76,8 +74,6 @@ function Game() {
     })
   }
 }
-
-
 
 function distanceBetween(vectorA, vectorB) {
   // Pythagorean theorem time
