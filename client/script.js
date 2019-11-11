@@ -6,6 +6,15 @@ const ctx = canvas.getContext('2d')
 
 socket.on('ballPositions', (pack)=> {
   ctx.clearRect(0,0,400,600)
+  //draw hole
+  ctx.beginPath()
+  ctx.arc(200, 50, 20, 0, 2*Math.PI)
+  ctx.fillStyle = 'black'
+  ctx.fill()
+  ctx.lineWidth = 2
+  ctx.strokeStyle = '#003300'
+  ctx.stroke()
+   
   pack.forEach(ballPos => {
     ctx.beginPath()
     ctx.arc(ballPos.x, ballPos.y, 15, 0, 2 * Math.PI)
@@ -15,6 +24,7 @@ socket.on('ballPositions', (pack)=> {
     ctx.strokeStyle = '#003300'
     ctx.stroke()
   })
+ 
 })
 
 document.addEventListener('click', (e) => {

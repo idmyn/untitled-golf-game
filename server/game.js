@@ -22,7 +22,7 @@ function Game() {
     const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, static),
       bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, static),
       leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, static),
-      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, static)    
+      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, static)
     const bodies = [topWall, bottomWall, leftWall, rightWall]
     bodies.forEach(body => body.restitution =0.6)
     World.add(this.world, bodies)
@@ -36,14 +36,18 @@ function Game() {
 
   this.run = () => {
     setInterval(() => {
+      
       const pack = []
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
         const ballPos = player.ball.position
         pack.push(ballPos)
+        checkIfWin(player.ball)
       }
       sendPackets(pack)
     }, 1000/25)
+
+
 
     function sendPackets(pack){
       for(const playerId in Player.all){
@@ -78,4 +82,10 @@ function Game() {
 function distanceBetween(vectorA, vectorB) {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
+}
+
+function checkIfWin(ball){
+  if(distanceBetween(ball.position, {x:200,y:50}) < 20 && ball.speed < 3){
+    console.log("YP WONW")
+  }
 }
