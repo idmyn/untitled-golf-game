@@ -40,20 +40,20 @@ function sendPackets(pack){
   }
 }
 
- global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
- const Matter = require('matter-js/build/matter.js')
+global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
+const Matter = require('matter-js/build/matter.js')
 
- const Engine = Matter.Engine,
-   World = Matter.World,
-   Bodies = Matter.Bodies,
-   Body = Matter.Body,
-   Vector = Matter.Vector
+const Engine = Matter.Engine,
+  World = Matter.World,
+  Bodies = Matter.Bodies,
+  Body = Matter.Body,
+  Vector = Matter.Vector
 
- const engine = Engine.create()
- const world = engine.world
- // world.gravity.y = 0
+const engine = Engine.create()
+const world = engine.world
+// world.gravity.y = 0
 
- Engine.run(engine)
+Engine.run(engine)
 
 // function updateMatter(){
 //   Matter.Events.trigger(engine, 'tick', { timestamp: engine.timing.timestamp })
