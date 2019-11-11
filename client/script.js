@@ -27,6 +27,8 @@ socket.on('ballPositions', (pack)=> {
  
 })
 
+socket.on('playerWins', ()=>{alert("YOU WIN")})
+
 document.addEventListener('click', (e) => {
   //https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
   //find mouse click x,y

@@ -42,7 +42,7 @@ function Game() {
         const player = Player.all[playerId]
         const ballPos = player.ball.position
         pack.push(ballPos)
-        checkIfWin(player.ball)
+        checkIfWin(player)
       }
       sendPackets(pack)
     }, 1000/25)
@@ -84,8 +84,8 @@ function distanceBetween(vectorA, vectorB) {
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }
 
-function checkIfWin(ball){
-  if(distanceBetween(ball.position, {x:200,y:50}) < 20 && ball.speed < 3){
-    console.log("YP WONW")
+function checkIfWin(player){
+  if(distanceBetween(player.ball.position, {x:200,y:50}) < 20 && player.ball.speed < 3){
+    player.socket.emit('playerWins', {won: true})
   }
 }
