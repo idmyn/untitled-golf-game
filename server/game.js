@@ -60,6 +60,7 @@ function Game() {
 
   this.createBall = () => {
     const ball = Bodies.circle(300, 300, 15)
+    ball.frictionAir = 0.03
     World.add(this.world, ball)
     return ball
   }
