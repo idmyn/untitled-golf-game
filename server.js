@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
@@ -7,6 +8,8 @@ const io = require('socket.io')(http)
 
 const Player = require('./server/player')
 const Game = require('./server/game')
+
+const SOCKET_LIST = {}
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html')
@@ -22,6 +25,14 @@ game.initialize()
 game.run()
 
 io.on('connection', function(socket) {
-  Player.onConnect(socket, game)
+  const player = Player.onConnect(socket, game)
   console.log('a user connected')
+
+  socket.on('disconnect', () => {
+    delete Player.all[player.id]
+    console.log(Player.all)
+    console.log("Player disconnected")
+  })
 })
+
+

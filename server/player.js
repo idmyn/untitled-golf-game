@@ -27,4 +27,5 @@ Player.onConnect = (socket, game) => {
       game.mouseClicked(ball, packet)
     }
   })
+  return player
 }
