@@ -1,8 +1,6 @@
 /* eslint-disable no-debugger */
 module.exports = Player
 
-const Matter = require('matter-js/build/matter.js')
-
 let count = 1
 
 function Player(socket, ball) {
