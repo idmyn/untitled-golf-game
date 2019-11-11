@@ -22,6 +22,8 @@ Player.onConnect = (socket, game) => {
 
   socket.on('mouseClick', (packet) =>{
     console.log(packet)
-    game.mouseClicked(ball, packet)
+    if (ball.speed < 0.1) {
+      game.mouseClicked(ball, packet)
+    }
   })
 }
