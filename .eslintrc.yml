@@ -15,7 +15,7 @@ rules:
     - unix
   quotes:
     - warn
-    - double
+    - single
     - allowTemplateLiterals: true
       avoidEscape: true
   semi:

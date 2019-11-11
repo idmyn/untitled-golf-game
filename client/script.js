@@ -1,3 +1,3 @@
 const socket = io()
 
-console.log("hi")
+console.log('hi')
