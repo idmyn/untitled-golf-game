@@ -44,7 +44,7 @@ function Game() {
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
         const ballPos = player.ball.position
-        pack.push({playerId: ballPos})
+        pack.push({[playerId]: ballPos})
         checkIfWin(player)
       }
       sendPackets(pack)
