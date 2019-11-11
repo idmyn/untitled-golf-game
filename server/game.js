@@ -15,7 +15,7 @@ function Game() {
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
     const engine = Engine.create()
     this.world = engine.world
-    // world.gravity.y = 0
+    this.world.gravity.y = 0
 
     Engine.run(engine)
 
@@ -53,4 +53,24 @@ function Game() {
     World.add(this.world, ball)
     return ball
   }
+
+  this.mouseClicked = function(ball, mousePosition){
+  const distance = distanceBetween(ball.position, mousePosition)
+  const angle = Vector.angle(ball.position, mousePosition)
+  const forceMultiplier = distance / 50 + 1
+  const force = 0.005 * forceMultiplier > 0.05 ? 0.05 : 0.005 * forceMultiplier
+
+  // https://stackoverflow.com/a/45118761
+  Body.applyForce(ball, ball.position, {
+    x: Math.cos(angle) * force,
+    y: Math.sin(angle) * force
+  })
+  }
+}
+
+
+
+function distanceBetween(vectorA, vectorB) {
+  // Pythagorean theorem time
+  return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }

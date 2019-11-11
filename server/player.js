@@ -21,4 +21,11 @@ Player.onConnect = (socket, game) => {
  // const ball = Matter.Bodies.circle(300, 300, 15)
   const ball = game.createBall()
   const player = new Player(socket, ball)
+
+  socket.on('mouseClick', (packet) =>{
+    console.log(packet)
+    game.mouseClicked(ball, packet)
+  })
 }
+
+

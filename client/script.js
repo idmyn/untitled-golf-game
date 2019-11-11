@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 const socket = io()
 
 const canvas = document.querySelector('#game')
@@ -11,3 +12,28 @@ socket.on('ballPositions', (pack)=> {
     ctx.stroke()
   })
 })
+
+document.addEventListener('click', (e) => {
+  //https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
+  //find mouse click x,y
+  let x
+  let y
+  if (e.pageX || e.pageY) { 
+    x = e.pageX
+    y = e.pageY
+  }
+  else { 
+    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft 
+    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop 
+  } 
+  const mouseClickPos = {
+    x: x -= canvas.offsetLeft,
+    y: y -= canvas.offsetTop
+  }
+
+  socket.emit("mouseClick", mouseClickPos)
+  
+})
+
+
+
