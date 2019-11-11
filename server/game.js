@@ -17,6 +17,7 @@ function Game() {
     this.world = engine.world
     this.world.gravity.y = 0
 
+
     Engine.run(engine)
 
     const static = {isStatic: true}
@@ -45,7 +46,7 @@ function Game() {
         const player = Player.all[playerId]
         const ballPos = player.ball.position
         pack.push({[playerId]: ballPos})
-        checkIfWin(player)
+        this.checkIfWin(player)
       }
       sendPackets(pack)
     }, 1000/25)
@@ -65,6 +66,13 @@ function Game() {
     return ball
   }
 
+  this.createRect = (mapObject) => {
+    const rect = Bodies.rectangle(mapObject.x + mapObject.width/2, mapObject.y+mapObject.height/2, mapObject.width, mapObject.height, {isStatic: true})
+    rect.restitution = 0.6
+    World.add(this.world, rect)
+    return rect
+  }
+
   this.mouseClicked = function(ball, mousePosition){
     const distance = distanceBetween(ball.position, mousePosition)
     const angle = Vector.angle(ball.position, mousePosition)
@@ -77,6 +85,25 @@ function Game() {
       y: Math.sin(angle) * force
     })
   }
+
+  this.initMap =function(){
+  
+    const hole = this.map.hole
+    this.holePos = {x:hole.x,y:hole.y}
+    this.holeRadius = hole.radius
+    const mapObjects = this.map.mapObjects
+
+    for(const mapObjectId in mapObjects){
+      this.createRect(mapObjects[mapObjectId])
+    }
+
+  }
+  
+  this.checkIfWin = function(player){
+    if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
+      player.socket.emit('playerWins', {won: true})
+    }
+  }
 }
 
 function distanceBetween(vectorA, vectorB) {
@@ -84,8 +111,4 @@ function distanceBetween(vectorA, vectorB) {
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }
 
-function checkIfWin(player){
-  if(distanceBetween(player.ball.position, {x:200,y:50}) < 20 && player.ball.speed < 3){
-    player.socket.emit('playerWins', {won: true})
-  }
-}
+
