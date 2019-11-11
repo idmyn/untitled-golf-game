@@ -30,8 +30,6 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', () => {
     delete Player.all[player.id]
-    console.log("Player disconnected")
+    console.log("a user disconnected")
   })
 })
-
-
