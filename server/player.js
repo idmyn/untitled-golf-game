@@ -26,14 +26,21 @@ Player.onConnect = (socket) => {
 
 
 setInterval(()=>{
-  updateMatter()
+  const pack= []
   for(const playerId in Player.all){
     const  player = Player.all[playerId]
     const ballPos = player.ball.position
-    player.socket.emit('position', ballPos)
-
+    pack.push(ballPos)
   }
+  sendPackets(pack)
 },1000/25)
+
+function sendPackets(pack){
+  for(const playerId in Player.all){
+    const player = Player.all[playerId]
+    player.socket.emit('position', pack)
+  }
+}
 
 /*
 function playerJoined(ball){
@@ -50,26 +57,26 @@ function playerJoined(ball){
 }
   */
 
-global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
-const Matter = require('matter-js/build/matter.js')
 
-const Engine = Matter.Engine,
-  World = Matter.World,
-  Bodies = Matter.Bodies,
-  Body = Matter.Body,
-  Vector = Matter.Vector
-
-// assume dimensions of canvas = 400, 600
-
-const engine = Engine.create()
-const world = engine.world
-// world.gravity.y = 0
-
-Engine.run(engine)
-
-function updateMatter(){
-  Matter.Events.trigger(engine, 'tick', { timestamp: engine.timing.timestamp })
-  Matter.Engine.update(engine, engine.timing.delta)
-  Matter.Events.trigger(engine, 'afterTick', { timestamp: engine.timing.timestamp })
-}
-
+ global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
+ const Matter = require('matter-js/build/matter.js')
+ 
+ const Engine = Matter.Engine,
+   World = Matter.World,
+   Bodies = Matter.Bodies,
+   Body = Matter.Body,
+   Vector = Matter.Vector
+ 
+ // assume dimensions of canvas = 400, 600
+ 
+ const engine = Engine.create()
+ const world = engine.world
+ // world.gravity.y = 0
+ 
+ Engine.run(engine)
+ 
+ function updateMatter(){
+   Matter.Events.trigger(engine, 'tick', { timestamp: engine.timing.timestamp })
+   Matter.Engine.update(engine, engine.timing.delta)
+   Matter.Events.trigger(engine, 'afterTick', { timestamp: engine.timing.timestamp })
+ }
