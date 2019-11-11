@@ -10,5 +10,4 @@ socket.on('ballPositions', (pack)=> {
     ctx.arc(ballPos.x, ballPos.y, 15, 0, 2 * Math.PI)
     ctx.stroke()
   })
-
 })
