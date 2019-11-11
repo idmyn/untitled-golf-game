@@ -18,13 +18,16 @@ function Game() {
     this.world.gravity.y = 0
 
     Engine.run(engine)
+
     const static = {isStatic: true}
     const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, static),
       bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, static),
       leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, static),
       rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, static)
+
     const bodies = [topWall, bottomWall, leftWall, rightWall]
-    bodies.forEach(body => body.restitution =0.6)
+    bodies.forEach(body => body.restitution = 0.6)
+
     World.add(this.world, bodies)
 
     // function updateMatter(){
