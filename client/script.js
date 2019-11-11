@@ -15,7 +15,9 @@ socket.on('ballPositions', (pack)=> {
   ctx.strokeStyle = '#003300'
   ctx.stroke()
 
-  pack.forEach(ballPos => {
+  pack.forEach(pack => {
+    const playerId = Object.keys(pack)[0]
+    const ballPos = pack.playerId
     ctx.beginPath()
     ctx.arc(ballPos.x, ballPos.y, 15, 0, 2 * Math.PI)
     ctx.fillStyle = 'white'
