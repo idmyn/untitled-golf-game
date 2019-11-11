@@ -1,0 +1,24 @@
+{
+  "name": "golf",
+  "version": "1.0.0",
+  "description": "A golf game made for project 3 at FlatIron",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idmyn/golf.git"
+  },
+  "author": "Tim Golding, David Mynors",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/idmyn/golf/issues"
+  },
+  "homepage": "https://github.com/idmyn/golf#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
