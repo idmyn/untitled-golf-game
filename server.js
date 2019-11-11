@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
-app.use('/client', express.static('client'))
 const http = require('http').createServer(app)
+app.use('/client', express.static('client'))
+
 const io = require('socket.io')(http)
 
 const Player = require('./server/player')
@@ -18,4 +19,3 @@ io.on('connection', function(socket) {
   Player.onConnect(socket)
   console.log('a user connected')
 })
-

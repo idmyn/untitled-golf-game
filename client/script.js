@@ -3,7 +3,7 @@ const socket = io()
 const canvas = document.querySelector('#game')
 const ctx = canvas.getContext('2d')
 
-socket.on('position', (pack)=> {
+socket.on('ballPositions', (pack)=> {
   ctx.clearRect(0,0,400,600)
   pack.forEach(ballPos => {
     ctx.beginPath()
