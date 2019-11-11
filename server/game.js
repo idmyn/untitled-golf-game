@@ -18,9 +18,14 @@ function Game() {
     this.world.gravity.y = 0
 
     Engine.run(engine)
-
-    const ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true })
-    World.add(this.world, ground)
+    const static = {isStatic: true}
+    const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, static),
+      bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, static),
+      leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, static),
+      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, static)    
+    const bodies = [topWall, bottomWall, leftWall, rightWall]
+    bodies.forEach(body => body.restitution =0.6)
+    World.add(this.world, bodies)
 
     // function updateMatter(){
     //   Matter.Events.trigger(engine, 'tick', { timestamp: engine.timing.timestamp })
@@ -55,16 +60,16 @@ function Game() {
   }
 
   this.mouseClicked = function(ball, mousePosition){
-  const distance = distanceBetween(ball.position, mousePosition)
-  const angle = Vector.angle(ball.position, mousePosition)
-  const forceMultiplier = distance / 50 + 1
-  const force = 0.005 * forceMultiplier > 0.05 ? 0.05 : 0.005 * forceMultiplier
+    const distance = distanceBetween(ball.position, mousePosition)
+    const angle = Vector.angle(ball.position, mousePosition)
+    const forceMultiplier = distance / 50 + 1
+    const force = 0.005 * forceMultiplier > 0.05 ? 0.05 : 0.005 * forceMultiplier
 
-  // https://stackoverflow.com/a/45118761
-  Body.applyForce(ball, ball.position, {
-    x: Math.cos(angle) * force,
-    y: Math.sin(angle) * force
-  })
+    // https://stackoverflow.com/a/45118761
+    Body.applyForce(ball, ball.position, {
+      x: Math.cos(angle) * force,
+      y: Math.sin(angle) * force
+    })
   }
 }
 

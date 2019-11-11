@@ -9,6 +9,10 @@ socket.on('ballPositions', (pack)=> {
   pack.forEach(ballPos => {
     ctx.beginPath()
     ctx.arc(ballPos.x, ballPos.y, 15, 0, 2 * Math.PI)
+    ctx.fillStyle = 'white'
+    ctx.fill()
+    ctx.lineWidth = 2
+    ctx.strokeStyle = '#003300'
     ctx.stroke()
   })
 })
