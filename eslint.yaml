@@ -1,0 +1,36 @@
+env:
+  browser: true
+  node: true
+extends: 'eslint:recommended'
+parserOptions:
+  ecmaVersion: 6
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - warn
+    - double
+    - allowTemplateLiterals: true
+      avoidEscape: true
+  semi:
+    - error
+    - never
+  no-multiple-empty-lines:
+    - warn
+    - max: 1
+      maxBOF: 0
+      maxEOF: 0
+  prefer-const:
+    - error
+  space-before-function-paren:
+    - error
+    - never
+  no-console:
+    - warn
+    - allow:
+      - warn
+      - error
