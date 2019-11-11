@@ -9,8 +9,6 @@ const io = require('socket.io')(http)
 const Player = require('./server/player')
 const Game = require('./server/game')
 
-const SOCKET_LIST = {}
-
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html')
 })
@@ -30,8 +28,6 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', () => {
     delete Player.all[player.id]
-    console.log("Player disconnected")
+    console.log('a user disconnected')
   })
 })
-
-
