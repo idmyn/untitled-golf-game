@@ -1,6 +1,13 @@
 /* eslint-disable no-debugger */
 const socket = io()
 
+socket.on('initPlayer', (packet) => {
+  const h1 = document.createElement('h1')
+  const message = `You are player ${packet.playerId}`
+  h1.textContent = message
+  document.querySelector('body').append(h1)
+})
+
 const canvas = document.querySelector('#game')
 const ctx = canvas.getContext('2d')
 
