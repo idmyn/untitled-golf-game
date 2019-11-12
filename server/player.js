@@ -37,14 +37,12 @@ Player.onConnect = (socket, game) => {
   socket.on('login', (name) => {
     const player = Player.getPlayerBySocketId(socket.id)
 
-   
-
     User.find({name: name}, function(err, user){
       if(err) throw err
 
       if(user.length > 0){
         player.name = user[0].name
-      }else{
+      } else {
         const playerToSave = new User({
           name: name
         })
@@ -55,8 +53,6 @@ Player.onConnect = (socket, game) => {
         })
       }
     })
-
-  
   })
 
   return player
