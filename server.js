@@ -36,7 +36,8 @@ io.on('connection', function(socket) {
 
   socket.on('newMessage', (packet) => {
     const player = Player.getPlayerBySocketId(packet.socketId)
-    const newMessage = `${player.id}: ${packet.message}`  // in the future it would be nice if this was their name
+    const playerName = player.name ? player.name : player.id
+    const newMessage = `${playerName}: ${packet.message}`
     game.sendMessage(newMessage)
   })
   
