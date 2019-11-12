@@ -42,6 +42,9 @@ Player.onConnect = (socket, game) => {
 
       if(user.length > 0){
         player.name = user[0].name
+        socket.emit('successfulLogin', {
+          name: player.name
+        })
       } else {
         const playerToSave = new User({
           name: name
@@ -50,6 +53,9 @@ Player.onConnect = (socket, game) => {
         playerToSave.save(function(err, user){
           if(err) throw err
           player.name = user.name
+          socket.emit('successfulLogin', {
+            name: player.name
+          })
         })
       }
     })

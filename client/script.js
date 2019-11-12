@@ -107,3 +107,7 @@ document.querySelector('form').addEventListener('submit', (e) => {
   const name = form.querySelector('input[name="name"]').value
   socket.emit('login', name)
 })
+
+socket.on('successfulLogin', (packet) => {
+  console.log(packet)
+})
