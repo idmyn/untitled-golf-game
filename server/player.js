@@ -3,7 +3,7 @@ module.exports = Player
 const User = require('../db/schema')
 
 
-let count = 1
+let count = 0
 
 function Player(socket, ball) {
   this.id = count
@@ -16,6 +16,10 @@ function Player(socket, ball) {
 
   this.sendMessage = function(message){
     socket.emit('newMessage', {message: message})
+  }
+
+  this.playerName = function(){
+    return this.name ? this.name : this.id
   }
 }
 
@@ -61,6 +65,7 @@ Player.onConnect = (socket, game) => {
     })
   })
 
+
   return player
 }
 
@@ -71,3 +76,10 @@ Player.getPlayerBySocketId = function(socketId){
     }
   }
 }
+
+Player.gameWon = function(winningPlayer, game){
+  game.players.forEach(player => {
+    player.socket.emit('gameWon', {winningPlayer: winningPlayer})
+  })
+}
+

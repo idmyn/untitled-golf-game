@@ -41,7 +41,8 @@ function Game() {
   }
 
   this.run = () => {
-    setInterval(() => {
+    this.gameTickId = setInterval(() => {
+      console.log(this.players.length)
       const pack = []
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
@@ -87,7 +88,6 @@ function Game() {
     const angle = Vector.angle(ball.position, mousePosition)
     const forceMultiplier = distance / 50 + 1
     const force = 0.005 * forceMultiplier > 0.05 ? 0.05 : 0.005 * forceMultiplier
-
     // https://stackoverflow.com/a/45118761
     Body.applyForce(ball, ball.position, {
       x: Math.cos(angle) * force,
@@ -111,6 +111,8 @@ function Game() {
   this.checkIfWin = function(player) {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
       player.socket.emit('playerWins', {won: true})
+      Player.gameWon(player.playerName(),this)
+      clearInterval(this.gameTickId)
     }
   }
 
@@ -122,7 +124,8 @@ function Game() {
   }
   
   this.removePlayer = function(curPlayer){
-    this.players = this.players.filter(player => player !== curPlayer)
+    this.players = this.players.filter(player => player != curPlayer)
+    World.remove(this.world, curPlayer.ball)
     delete Player.all[curPlayer.id]
   }
 }

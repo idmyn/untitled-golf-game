@@ -1,7 +1,7 @@
 const MapObject = require('./mapObject')
 module.exports = Map
 
-let count = 1
+let count = 0
 function Map(){
   this.id = count
   this.mapObjects = []

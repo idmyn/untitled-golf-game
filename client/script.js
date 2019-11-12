@@ -115,3 +115,8 @@ socket.on('successfulLogin', (packet) => {
   document.querySelector('#playerName').textContent = newPlayerName
   document.querySelector('form').remove()
 })
+
+
+socket.on('gameWon', (packet)=>{
+  document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
+})
