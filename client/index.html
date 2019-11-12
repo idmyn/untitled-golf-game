@@ -10,14 +10,15 @@
     <script defer src="/client/script.js"></script>
   </head>
   <body>
+    <div class="container-fluid mt-5">
+      <div class="row justify-content-center">
 
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-5 text-center">
+        <div class="col-7 col-lg-5 text-center">
           <h1>Untitled Golf Game</h1>
             <canvas width="400" height="600" id="game"></canvas>
         </div>
-        <div class="col-7 mt-5" id="sidebar">
+
+        <div class="col-5 col-lg-5 mt-5" id="sidebar">
           <form id="login">
             <label for="name">Login as:</label>
             <input name="name" type="text" value=""/>
@@ -29,8 +30,8 @@
             <form id="chatbox-form"><input name="message" placeholder="Enter Message"></input></form>
           </div>
         </div>
+
       </div>
     </div>
-
   </body>
 </html>

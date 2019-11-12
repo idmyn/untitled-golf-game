@@ -31,12 +31,12 @@ socket.on('initPlayer', (packet) => {
   const playerLabel = document.createElement('h2')
   playerLabel.id = 'playerName'
   playerLabel.textContent = `You are player ${packet.playerId}`
-  document.querySelector('#sidebar').append(playerLabel)
+  document.querySelector('#player-info').append(playerLabel)
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots`
   shotCount.id = 'shotCount'
-  document.querySelector('#sidebar').append(shotCount)
+  document.querySelector('#player-info').append(shotCount)
 
   mapObjects = packet.mapObjects
   mapHole = packet.hole
