@@ -9,6 +9,7 @@ function Player(socket, ball) {
   this.id = count
   this.socket = socket
   this.ball = ball
+  this.potted = false
   this.shots = 0
 
   Player.all[this.id] = this

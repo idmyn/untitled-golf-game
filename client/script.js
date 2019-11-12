@@ -89,7 +89,7 @@ socket.on('ballPositions', (pack)=> {
   })
 })
 
-socket.on('playerWins', () => {alert('YOU WIN')} )
+socket.on('playerPots', () => {} )
 
 canvas.addEventListener('click', (e) => {
   // https://stackoverflow.com/a/17130415

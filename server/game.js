@@ -44,28 +44,28 @@ function Game() {
     this.gameTickId = setInterval(() => {
       console.log(this.players.length)
       const pack = []
-      for (const playerId in Player.all) {
-        const player = Player.all[playerId]
-        const ballPos = player.ball.position
-        const shots = player.shots
-        const name = player.name ? player.name : player.id
-        pack.push({
-          [playerId]: {
-            ballPos: ballPos,
-            shots: shots,
-            name: name
-          }
-        })
-        this.checkIfWin(player)
-      }
-      sendPackets(pack)
+      this.players.forEach((player) =>{
+        if(!player.potted){
+          const ballPos = player.ball.position
+          const shots = player.shots
+          const name = player.name ? player.name : player.id
+          pack.push({
+            [player.id]: {
+              ballPos: ballPos,
+              shots: shots,
+              name: name
+            }
+          })
+          this.checkIfPotted(player)
+        }
+      })
+      sendPackets(pack,this.players)
     }, 1000/25)
 
-    function sendPackets(pack){
-      for(const playerId in Player.all){
-        const player = Player.all[playerId]
+    function sendPackets(pack,players){
+      players.forEach((player) =>{
         player.socket.emit('ballPositions', pack)
-      }
+      })
     }
   }
 
@@ -108,11 +108,13 @@ function Game() {
 
   }
 
-  this.checkIfWin = function(player) {
+  this.checkIfPotted = function(player) {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
-      player.socket.emit('playerWins', {won: true})
-      Player.gameWon(player.playerName(),this)
-      clearInterval(this.gameTickId)
+      World.remove(this.world, player.ball)
+      player.potted = true
+      player.socket.emit('playerPots', {potted: true})
+      //Player.gameWon(player.playerName(),this)
+      //clearInterval(this.gameTickId)
     }
   }
 
