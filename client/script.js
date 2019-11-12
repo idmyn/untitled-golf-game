@@ -91,21 +91,11 @@ socket.on('ballPositions', (pack)=> {
 socket.on('playerWins', () => {alert('YOU WIN')} )
 
 document.addEventListener('click', (e) => {
-  //https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
-  //find mouse click x,y
-  let x
-  let y
-  if (e.pageX || e.pageY) {
-    x = e.pageX
-    y = e.pageY
-  } else {
-    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft
-    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop
-  }
-
+  // https://stackoverflow.com/a/17130415
+  const rect = canvas.getBoundingClientRect()
   const mouseClickPos = {
-    x: x -= canvas.offsetLeft,
-    y: y -= canvas.offsetTop
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
   }
 
   socket.emit('mouseClick', mouseClickPos)
