@@ -42,7 +42,7 @@ function Game() {
 
   this.run = () => {
     setInterval(() => {
-
+      console.log(this.players)
       const pack = []
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
@@ -118,6 +118,11 @@ function Game() {
     this.players.forEach(player => {
       player.sendMessage(message)
     })
+  }
+  
+  this.removePlayer = function(curPlayer){
+    this.players = this.players.filter(player => player !== curPlayer)
+    delete Player.all[curPlayer.id]
   }
 }
 
