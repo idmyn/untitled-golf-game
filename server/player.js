@@ -18,7 +18,7 @@ Player.onConnect = (socket, game) => {
   const ball = game.createBall()
   const player = new Player(socket, ball)
 
-  socket.emit('initPlayer', {playerId: player.id})
+  socket.emit('initPlayer', {playerId: player.id, hole: game.map.hole, mapObjects: game.map.mapObjects})
 
   socket.on('mouseClick', (packet) =>{
     if (ball.speed < 0.1) {

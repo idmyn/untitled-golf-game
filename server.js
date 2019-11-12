@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
@@ -8,6 +7,8 @@ const io = require('socket.io')(http)
 
 const Player = require('./server/player')
 const Game = require('./server/game')
+const Map = require('./server/map')
+
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html')
@@ -19,8 +20,11 @@ http.listen(3000, function() {
 
 // Start a game on server start
 const game = new Game()
+const map = Map.map1()
+game.map = map
 game.initialize()
 game.run()
+game.initMap()
 
 io.on('connection', function(socket) {
   const player = Player.onConnect(socket, game)

@@ -1,12 +1,35 @@
 /* eslint-disable no-debugger */
 const socket = io()
+let mapObjects
+let mapHole
 
 socket.on('initPlayer', (packet) => {
   const h1 = document.createElement('h1')
   const message = `You are player ${packet.playerId}`
   h1.textContent = message
   document.querySelector('body').append(h1)
+
+  mapObjects = packet.mapObjects
+  mapHole = packet.hole
 })
+
+function drawMap(){
+  ctx.beginPath()
+  ctx.arc(mapHole.x, mapHole.y, mapHole.radius, 0, 2*Math.PI)
+  ctx.fillStyle = 'black'
+  ctx.fill()
+  ctx.lineWidth = 2
+  ctx.strokeStyle = '#003300'
+  ctx.stroke()
+
+  mapObjects.forEach(mapObject => {
+    ctx.beginPath()
+    ctx.rect(mapObject.x, mapObject.y, mapObject.width, mapObject.height)
+    ctx.fillStyle = 'black'
+    ctx.fill()
+    ctx.stroke()
+  })
+}
 
 const canvas = document.querySelector('#game')
 const ctx = canvas.getContext('2d')
@@ -14,13 +37,7 @@ const ctx = canvas.getContext('2d')
 socket.on('ballPositions', (pack)=> {
   ctx.clearRect(0,0,400,600)
   //draw hole
-  ctx.beginPath()
-  ctx.arc(200, 50, 20, 0, 2*Math.PI)
-  ctx.fillStyle = 'black'
-  ctx.fill()
-  ctx.lineWidth = 2
-  ctx.strokeStyle = '#003300'
-  ctx.stroke()
+  drawMap()
 
   pack.forEach(pack => {
     const playerId = Object.keys(pack)[0]
