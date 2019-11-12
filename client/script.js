@@ -119,7 +119,6 @@ socket.on('successfulLogin', (packet) => {
 
 socket.on('gameWon', (packet)=>{
   // document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
-  document.body.innerHTML = ''
   const ul = document.createElement('ul')
   ul.id = 'scoreboard'
 

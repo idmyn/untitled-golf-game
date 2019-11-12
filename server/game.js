@@ -1,8 +1,9 @@
 module.exports = Game
 
 const Player = require('./player')
-
+const Map = require('./map')
 const Matter = require('matter-js/build/matter.js')
+let count = 0
 
 const Engine = Matter.Engine,
   World = Matter.World,
@@ -11,6 +12,7 @@ const Engine = Matter.Engine,
   Vector = Matter.Vector
 
 function Game() {
+  this.id = count
   this.initialize = () => {
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
     const engine = Engine.create()
@@ -18,6 +20,7 @@ function Game() {
     this.world.gravity.y = 0
     this.players = []
     this.messages = []
+    
 
 
     Engine.run(engine)
@@ -41,10 +44,14 @@ function Game() {
   }
 
   this.run = () => {
+   
     this.gameTickId = setInterval(() => {
+
       const pack = []
       this.players.forEach((player) =>{
+        
         if(!player.potted){
+          console.log(player.id, player.potted)
           const ballPos = player.ball.position
           const shots = player.shots
           const name = player.name ? player.name : player.id
@@ -63,6 +70,7 @@ function Game() {
 
     function sendPackets(pack,players){
       players.forEach((player) =>{
+        console.log(pack)
         player.socket.emit('ballPositions', pack)
       })
     }
@@ -118,7 +126,6 @@ function Game() {
 
   this.finish = function() {
     console.log('finished!!!!!')
-    console.log(this)
 
     const winPacket = {
     }
@@ -128,7 +135,10 @@ function Game() {
     })
 
     this.players.forEach(player => player.socket.emit('gameWon', winPacket))
-    clearInterval(this.gameTickId)
+    setTimeout(()=>{
+      clearInterval(this.gameTickId)
+
+      delete Game.all[this.id]},100)
   }
 
 
@@ -144,6 +154,20 @@ function Game() {
     World.remove(this.world, curPlayer.ball)
     delete Player.all[curPlayer.id]
   }
+  Game.all[this.id] = this
+  count++
+}
+
+Game.all = {}
+
+Game.newGame = function(){
+  const game = new Game()
+  const map = Map.map1()
+  game.map = map
+  game.initialize()
+  game.run()
+  game.initMap()
+  return game
 }
 
 function distanceBetween(vectorA, vectorB) {
