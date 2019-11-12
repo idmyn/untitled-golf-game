@@ -90,7 +90,7 @@ socket.on('ballPositions', (pack)=> {
 
 socket.on('playerWins', () => {alert('YOU WIN')} )
 
-document.addEventListener('click', (e) => {
+canvas.addEventListener('click', (e) => {
   // https://stackoverflow.com/a/17130415
   const rect = canvas.getBoundingClientRect()
   const mouseClickPos = {
