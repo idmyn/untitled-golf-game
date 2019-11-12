@@ -16,6 +16,8 @@ function Game() {
     const engine = Engine.create()
     this.world = engine.world
     this.world.gravity.y = 0
+    this.players = []
+    this.messages = []
 
 
     Engine.run(engine)
@@ -39,23 +41,30 @@ function Game() {
   }
 
   this.run = () => {
-    setInterval(() => {
-
+    this.gameTickId = setInterval(() => {
       const pack = []
-      for (const playerId in Player.all) {
-        const player = Player.all[playerId]
-        const ballPos = player.ball.position
-        pack.push({[playerId]: ballPos})
-        this.checkIfWin(player)
-      }
-      sendPackets(pack)
+      this.players.forEach((player) =>{
+        if(!player.potted){
+          const ballPos = player.ball.position
+          const shots = player.shots
+          const name = player.name ? player.name : player.id
+          pack.push({
+            [player.id]: {
+              ballPos: ballPos,
+              shots: shots,
+              name: name
+            }
+          })
+          this.checkIfPotted(player)
+        }
+      })
+      sendPackets(pack,this.players)
     }, 1000/25)
 
-    function sendPackets(pack){
-      for(const playerId in Player.all){
-        const player = Player.all[playerId]
+    function sendPackets(pack,players){
+      players.forEach((player) =>{
         player.socket.emit('ballPositions', pack)
-      }
+      })
     }
   }
 
@@ -78,7 +87,6 @@ function Game() {
     const angle = Vector.angle(ball.position, mousePosition)
     const forceMultiplier = distance / 50 + 1
     const force = 0.005 * forceMultiplier > 0.05 ? 0.05 : 0.005 * forceMultiplier
-
     // https://stackoverflow.com/a/45118761
     Body.applyForce(ball, ball.position, {
       x: Math.cos(angle) * force,
@@ -87,7 +95,7 @@ function Game() {
   }
 
   this.initMap =function(){
-  
+
     const hole = this.map.hole
     this.holePos = {x:hole.x,y:hole.y}
     this.holeRadius = hole.radius
@@ -98,11 +106,43 @@ function Game() {
     }
 
   }
-  
-  this.checkIfWin = function(player){
+
+  this.checkIfPotted = function(player) {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
-      player.socket.emit('playerWins', {won: true})
+      World.remove(this.world, player.ball)
+      player.potted = true
+      player.socket.emit('playerPots', {potted: true})
+      this.players.every(player => player.potted === true) && this.finish()
     }
+  }
+
+  this.finish = function() {
+    console.log('finished!!!!!')
+    console.log(this)
+
+    const winPacket = {
+    }
+
+    this.players.forEach(player => {
+      winPacket[player.playerName()] = {shots: player.shots}
+    })
+
+    this.players.forEach(player => player.socket.emit('gameWon', winPacket))
+    clearInterval(this.gameTickId)
+  }
+
+
+  this.sendMessage = function(message){
+    this.messages.push(message)
+    this.players.forEach(player => {
+      player.sendMessage(message)
+    })
+  }
+
+  this.removePlayer = function(curPlayer){
+    this.players = this.players.filter(player => player != curPlayer)
+    World.remove(this.world, curPlayer.ball)
+    delete Player.all[curPlayer.id]
   }
 }
 
@@ -110,5 +150,3 @@ function distanceBetween(vectorA, vectorB) {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }
-
-

@@ -1,5 +1,5 @@
 module.exports = MapObject
-let count = 1
+let count = 0
 
 function MapObject(x,y,width, height){
   this.id = count
