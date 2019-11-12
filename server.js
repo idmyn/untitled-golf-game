@@ -1,9 +1,12 @@
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
+const db = require('./db/database')
 app.use('/client', express.static('client'))
 
 const io = require('socket.io')(http)
+
+db()
 
 const Player = require('./server/player')
 const Game = require('./server/game')
