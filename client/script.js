@@ -1,16 +1,17 @@
 const socket = io()
 let mapObjects
 let mapHole
+
 ///////////////////////////////////////////////////////////////////
 //chatbox
-const chatBoxForm = document.querySelector("#chatbox-form")
+const chatBoxForm = document.querySelector('#chatbox-form')
 const chatBoxMessages = document.querySelector('#chatbox-messages')
 
 chatBoxForm.onsubmit= (e) => {
   e.preventDefault()
   const message = e.target.querySelector('input[name="message"]').value
-  e.target.querySelector('input[name="message"').value = ""
-  socket.emit("newMessage", {socketId: socket.id, message: message})
+  e.target.querySelector('input[name="message"').value = ''
+  socket.emit('newMessage', {socketId: socket.id, message: message})
 }
 
 socket.on('newMessage', (packet) =>{
@@ -18,7 +19,7 @@ socket.on('newMessage', (packet) =>{
 })
 
 function displayMessage(message){
-  const newMessage = document.createElement("li")
+  const newMessage = document.createElement('li')
   newMessage.innerText = message
   chatBoxMessages.append(newMessage)
 }
@@ -33,7 +34,7 @@ socket.on('initPlayer', (packet) => {
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots.`
-  shotCount.id = "shotCount"
+  shotCount.id = 'shotCount'
   document.querySelector('#sidebar').append(shotCount)
 
   mapObjects = packet.mapObjects
@@ -62,7 +63,7 @@ const canvas = document.querySelector('#game')
 const ctx = canvas.getContext('2d')
 
 socket.on('ballPositions', (pack)=> {
-  ctx.clearRect(0,0,400,600)
+  ctx.clearRect(0, 0, 400, 600)
   //draw hole
   drawMap()
 
@@ -79,7 +80,7 @@ socket.on('ballPositions', (pack)=> {
     ctx.lineWidth = 2
     ctx.strokeStyle = '#003300'
     ctx.stroke()
-    const playerShotsH2 = document.querySelector("#shotCount")
+    const playerShotsH2 = document.querySelector('#shotCount')
     playerShotsH2.innerText = playerShots === 1
       ? `You have taken ${playerShots} shot.`
       : `You have taken ${playerShots} shots.`
