@@ -39,6 +39,10 @@ Player.onConnect = (socket, game) => {
     }
   })
 
+  socket.on('playAgain', (packet) => {
+    console.log('again!!!!!!')
+  })
+
   socket.on('login', (name) => {
     const player = Player.getPlayerBySocketId(socket.id)
 
@@ -83,4 +87,3 @@ Player.gameWon = function(winningPlayer, game){
     player.socket.emit('gameWon', {winningPlayer: winningPlayer})
   })
 }
-

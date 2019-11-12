@@ -118,5 +118,23 @@ socket.on('successfulLogin', (packet) => {
 
 
 socket.on('gameWon', (packet)=>{
-  document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
+  // document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
+  document.body.innerHTML = ''
+  const ul = document.createElement('ul')
+  ul.id = 'scoreboard'
+
+  for (const playerName in packet) {
+    const li = document.createElement('li')
+    li.textContent = `${playerName} - ${packet[playerName].shots} shots`
+    ul.append(li)
+  }
+
+  const button = document.createElement('button')
+  button.id = 'playAgain'
+  button.textContent = 'Join new game'
+  button.addEventListener('click', (e) => {
+    socket.emit('playAgain')
+  })
+
+  document.body.append(ul, button)
 })

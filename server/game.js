@@ -42,7 +42,6 @@ function Game() {
 
   this.run = () => {
     this.gameTickId = setInterval(() => {
-      console.log(this.players.length)
       const pack = []
       this.players.forEach((player) =>{
         if(!player.potted){
@@ -113,10 +112,25 @@ function Game() {
       World.remove(this.world, player.ball)
       player.potted = true
       player.socket.emit('playerPots', {potted: true})
-      //Player.gameWon(player.playerName(),this)
-      //clearInterval(this.gameTickId)
+      this.players.every(player => player.potted === true) && this.finish()
     }
   }
+
+  this.finish = function() {
+    console.log('finished!!!!!')
+    console.log(this)
+
+    const winPacket = {
+    }
+
+    this.players.forEach(player => {
+      winPacket[player.playerName()] = {shots: player.shots}
+    })
+
+    this.players.forEach(player => player.socket.emit('gameWon', winPacket))
+    clearInterval(this.gameTickId)
+  }
+
 
   this.sendMessage = function(message){
     this.messages.push(message)
@@ -124,7 +138,7 @@ function Game() {
       player.sendMessage(message)
     })
   }
-  
+
   this.removePlayer = function(curPlayer){
     this.players = this.players.filter(player => player != curPlayer)
     World.remove(this.world, curPlayer.ball)
