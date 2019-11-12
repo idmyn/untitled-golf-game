@@ -6,6 +6,7 @@ function Player(socket, ball) {
   this.id = count
   this.socket = socket
   this.ball = ball
+  this.shots = 0
 
   Player.all[this.id] = this
   count++
@@ -21,6 +22,7 @@ Player.onConnect = (socket, game) => {
 
   socket.on('mouseClick', (packet) =>{
     if (ball.speed < 0.1) {
+      player.shots++
       game.mouseClicked(ball, packet)
     }
   })

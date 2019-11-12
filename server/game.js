@@ -45,7 +45,13 @@ function Game() {
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
         const ballPos = player.ball.position
-        pack.push({[playerId]: ballPos})
+        const shots = player.shots
+        pack.push({
+          [playerId]: {
+            ballPos: ballPos,
+            shots: shots
+          }
+        })
         this.checkIfWin(player)
       }
       sendPackets(pack)
@@ -87,7 +93,7 @@ function Game() {
   }
 
   this.initMap =function(){
-  
+
     const hole = this.map.hole
     this.holePos = {x:hole.x,y:hole.y}
     this.holeRadius = hole.radius
@@ -98,8 +104,8 @@ function Game() {
     }
 
   }
-  
-  this.checkIfWin = function(player){
+
+  this.checkIfWin = function(player) {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
       player.socket.emit('playerWins', {won: true})
     }
@@ -110,5 +116,3 @@ function distanceBetween(vectorA, vectorB) {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }
-
-
