@@ -1,6 +1,9 @@
 module.exports = Player
+//temp
+const User = require('../db/schema')
 
-let count = 1
+
+let count = 0
 
 function Player(socket, ball) {
   this.id = count
@@ -14,6 +17,10 @@ function Player(socket, ball) {
   this.sendMessage = function(message){
     socket.emit('newMessage', {message: message})
   }
+
+  this.playerName = function(){
+    return this.name ? this.name : this.id
+  }
 }
 
 Player.all = {}
@@ -24,12 +31,41 @@ Player.onConnect = (socket, game) => {
 
   socket.emit('initPlayer', {playerId: player.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
 
-  socket.on('mouseClick', (packet) =>{
+  socket.on('mouseClick', (packet) => {
     if (ball.speed < 0.1) {
       player.shots++
       game.mouseClicked(ball, packet)
     }
   })
+
+  socket.on('login', (name) => {
+    const player = Player.getPlayerBySocketId(socket.id)
+
+    User.find({name: name}, function(err, user){
+      if(err) throw err
+
+      if(user.length > 0){
+        player.name = user[0].name
+        socket.emit('successfulLogin', {
+          name: player.name
+        })
+      } else {
+        const playerToSave = new User({
+          name: name
+        })
+
+        playerToSave.save(function(err, user){
+          if(err) throw err
+          player.name = user.name
+          socket.emit('successfulLogin', {
+            name: player.name
+          })
+        })
+      }
+    })
+  })
+
+
   return player
 }
 
@@ -40,3 +76,10 @@ Player.getPlayerBySocketId = function(socketId){
     }
   }
 }
+
+Player.gameWon = function(winningPlayer, game){
+  game.players.forEach(player => {
+    player.socket.emit('gameWon', {winningPlayer: winningPlayer})
+  })
+}
+

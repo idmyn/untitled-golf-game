@@ -29,11 +29,12 @@ socket.on('initPlayer', (packet) => {
   packet.messages.forEach(message => displayMessage(message))
 
   const playerLabel = document.createElement('h2')
+  playerLabel.id = 'playerName'
   playerLabel.textContent = `You are player ${packet.playerId}`
   document.querySelector('#sidebar').append(playerLabel)
 
   const shotCount = document.createElement('h2')
-  shotCount.textContent = `You have taken 0 shots.`
+  shotCount.textContent = `You have taken 0 shots`
   shotCount.id = 'shotCount'
   document.querySelector('#sidebar').append(shotCount)
 
@@ -76,14 +77,14 @@ socket.on('ballPositions', (pack)=> {
     ctx.fillStyle = 'white'
     ctx.fill()
     ctx.fillStyle = '#000000'
-    ctx.fillText(playerId, ballPos.x, ballPos.y)
+    ctx.fillText(pack[playerId].name, ballPos.x, ballPos.y)
     ctx.lineWidth = 2
     ctx.strokeStyle = '#003300'
     ctx.stroke()
     const playerShotsH2 = document.querySelector('#shotCount')
     playerShotsH2.innerText = playerShots === 1
-      ? `You have taken ${playerShots} shot.`
-      : `You have taken ${playerShots} shots.`
+      ? `You have taken ${playerShots} shot`
+      : `You have taken ${playerShots} shots`
 
   })
 })
@@ -99,4 +100,23 @@ canvas.addEventListener('click', (e) => {
   }
 
   socket.emit('mouseClick', mouseClickPos)
+})
+
+document.querySelector('#login').addEventListener('submit', (e) => {
+  e.preventDefault()
+  const form = e.target
+  const name = form.querySelector('input[name="name"]').value
+  socket.emit('login', name)
+})
+
+socket.on('successfulLogin', (packet) => {
+  const name = packet.name
+  const newPlayerName = `user: ${name}`
+  document.querySelector('#playerName').textContent = newPlayerName
+  document.querySelector('form').remove()
+})
+
+
+socket.on('gameWon', (packet)=>{
+  document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
 })

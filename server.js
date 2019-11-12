@@ -1,9 +1,12 @@
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
+const db = require('./db/database')
 app.use('/client', express.static('client'))
 
 const io = require('socket.io')(http)
+
+db()
 
 const Player = require('./server/player')
 const Game = require('./server/game')
@@ -33,12 +36,15 @@ io.on('connection', function(socket) {
 
   socket.on('newMessage', (packet) => {
     const player = Player.getPlayerBySocketId(packet.socketId)
-    const newMessage = `${player.id}: ${packet.message}`  // in the future it would be nice if this was their name
+    const playerName = player.name ? player.name : player.id
+    const newMessage = `${playerName}: ${packet.message}`
     game.sendMessage(newMessage)
   })
   
   socket.on('disconnect', () => {
-    game.removePlayer(Player.all[player.id])
+    const player = Player.getPlayerBySocketId(socket.id)
+    game.removePlayer(player)
+    
     console.log('a user disconnected')
   })
 })
