@@ -1,5 +1,4 @@
 const User = require('./schema')
-const mongoose = require("mongoose")
 const db = require('./database')
 
 db()

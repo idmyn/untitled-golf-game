@@ -76,7 +76,7 @@ socket.on('ballPositions', (pack)=> {
     ctx.fillStyle = 'white'
     ctx.fill()
     ctx.fillStyle = '#000000'
-    ctx.fillText(playerId, ballPos.x, ballPos.y)
+    ctx.fillText(pack[playerId].name, ballPos.x, ballPos.y)
     ctx.lineWidth = 2
     ctx.strokeStyle = '#003300'
     ctx.stroke()

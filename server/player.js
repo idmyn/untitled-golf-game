@@ -1,4 +1,7 @@
 module.exports = Player
+//temp
+const User = require('../db/schema')
+
 
 let count = 1
 
@@ -32,7 +35,28 @@ Player.onConnect = (socket, game) => {
   })
 
   socket.on('login', (name) => {
-    console.log(name)
+    const player = Player.getPlayerBySocketId(socket.id)
+
+   
+
+    User.find({name: name}, function(err, user){
+      if(err) throw err
+
+      if(user.length > 0){
+        player.name = user[0].name
+      }else{
+        const playerToSave = new User({
+          name: name
+        })
+
+        playerToSave.save(function(err, user){
+          if(err) throw err
+          player.name = user.name
+        })
+      }
+    })
+
+  
   })
 
   return player

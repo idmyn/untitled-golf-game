@@ -47,10 +47,12 @@ function Game() {
         const player = Player.all[playerId]
         const ballPos = player.ball.position
         const shots = player.shots
+        const name = player.name ? player.name : player.id
         pack.push({
           [playerId]: {
             ballPos: ballPos,
-            shots: shots
+            shots: shots,
+            name: name
           }
         })
         this.checkIfWin(player)
