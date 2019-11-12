@@ -1,10 +1,10 @@
 
 //require mongoose module
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 
 //require database URL from properties file
-var dbURL = 'mongodb://localhost:27017/golf'
+const dbURL = 'mongodb://localhost:27017/golf'
 
 //export this function and imported by server.js
 module.exports =function(){
