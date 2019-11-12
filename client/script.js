@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 const socket = io()
 let mapObjects
 let mapHole

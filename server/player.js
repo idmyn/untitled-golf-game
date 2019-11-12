@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 module.exports = Player
 
 let count = 1
