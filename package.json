@@ -19,6 +19,9 @@
   "homepage": "https://github.com/idmyn/golf#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "matter-js": "^0.14.2",
+    "nodemon": "^1.19.4",
     "socket.io": "^2.3.0"
-  }
+  },
+  "devDependencies": {}
 }

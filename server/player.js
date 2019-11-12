@@ -1,26 +1,29 @@
-//Exports Player
+/* eslint-disable no-debugger */
+module.exports = Player
 
-//Imports Entity
+let count = 1
 
-//Class Player
-//Inherits from Entity
-// direction, speed, mass, friction, socket
-// hasWon -boolean
+function Player(socket, ball) {
+  this.id = count
+  this.socket = socket
+  this.ball = ball
 
-//Instance method
-//update - polymorhpic of entity
-//  check collision against all entities - on goal hasWon = true, game ends
-//  check collison with walls 
-//  collision methods change angle/speed
-//  update position based on angle and speed
+  Player.all[this.id] = this
+  count++
+}
 
+Player.all = {}
 
-//Class method
-//onConnect
-//Create a new instance with associated socket
-//handle socket input 
-//handles disconnect
+Player.onConnect = (socket, game) => {
+  const ball = game.createBall()
+  const player = new Player(socket, ball)
 
+  socket.emit('initPlayer', {playerId: player.id, hole: game.map.hole, mapObjects: game.map.mapObjects})
 
-//private methods
-//calculated angles and speed based on input
+  socket.on('mouseClick', (packet) =>{
+    if (ball.speed < 0.1) {
+      game.mouseClicked(ball, packet)
+    }
+  })
+  return player
+}

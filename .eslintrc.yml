@@ -7,6 +7,7 @@ parserOptions:
 globals:
   io: readonly
 rules:
+  no-debugger: off
   indent:
     - error
     - 2
