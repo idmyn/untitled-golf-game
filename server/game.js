@@ -42,7 +42,6 @@ function Game() {
 
   this.run = () => {
     setInterval(() => {
-      console.log(this.players)
       const pack = []
       for (const playerId in Player.all) {
         const player = Player.all[playerId]
