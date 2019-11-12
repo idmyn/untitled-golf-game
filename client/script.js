@@ -29,12 +29,12 @@ socket.on('initPlayer', (packet) => {
 
   const playerLabel = document.createElement('h2')
   playerLabel.textContent = `You are player ${packet.playerId}`
-  document.querySelector('body').append(playerLabel)
+  document.querySelector('#sidebar').append(playerLabel)
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots.`
   shotCount.id = "shotCount"
-  document.querySelector('body').append(shotCount)
+  document.querySelector('#sidebar').append(shotCount)
 
   mapObjects = packet.mapObjects
   mapHole = packet.hole
@@ -80,10 +80,10 @@ socket.on('ballPositions', (pack)=> {
     ctx.strokeStyle = '#003300'
     ctx.stroke()
     const playerShotsH2 = document.querySelector("#shotCount")
-    playerShotsH2.innerText = playerShots === 1 
-      ? `You have taken ${playerShots} shot.` 
+    playerShotsH2.innerText = playerShots === 1
+      ? `You have taken ${playerShots} shot.`
       : `You have taken ${playerShots} shots.`
-    
+
   })
 })
 

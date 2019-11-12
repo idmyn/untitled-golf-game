@@ -3,5 +3,13 @@ body {
 }
 
 #game {
-    background-color: green;
+  background: green;
+}
+
+canvas {
+  display: inline;
+}
+
+#sidebar * + * {
+  margin-top: 2rem;
 }
