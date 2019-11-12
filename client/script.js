@@ -9,6 +9,7 @@ socket.on('initPlayer', (packet) => {
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots.`
+  shotCount.id = "shotCount"
   document.querySelector('body').append(shotCount)
 
   mapObjects = packet.mapObjects
@@ -44,6 +45,7 @@ socket.on('ballPositions', (pack)=> {
   pack.forEach(pack => {
     const playerId = Object.keys(pack)[0]
     const ballPos = pack[playerId].ballPos
+    const playerShots = pack[playerId].shots
     ctx.beginPath()
     ctx.arc(ballPos.x, ballPos.y, 15, 0, 2 * Math.PI)
     ctx.fillStyle = 'white'
@@ -53,7 +55,11 @@ socket.on('ballPositions', (pack)=> {
     ctx.lineWidth = 2
     ctx.strokeStyle = '#003300'
     ctx.stroke()
-    console.log(pack[playerId].shots)
+    const playerShotsH2 = document.querySelector("#shotCount")
+    playerShotsH2.innerText = playerShots === 1 
+      ? `You have taken ${playerShots} shot.` 
+      : `You have taken ${playerShots} shots.`
+    
   })
 })
 
