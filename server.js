@@ -19,19 +19,8 @@ http.listen(3000, function() {
   console.log('listening on *:3000')
 })
 
-// Start a game on server start
-/*
-const game = new Game()
-const map = Map.map1()
-game.map = map
-game.initialize()
-game.run()
-game.initMap()
-*/
-
 io.on('connection', function(socket) {
   const game = Player.joinNextAvailableGame()
-  console.log(game.id)
   const player = Player.onConnect(socket, game)
   game.players.push(player)
   console.log('a user connected')
@@ -46,7 +35,6 @@ io.on('connection', function(socket) {
   
   socket.on('disconnect', () => {
     const player = Player.getPlayerBySocketId(socket.id)
-    console.log(player.id, socket.id, player.gameId)
     const game = Game.all[player.gameId]
     game.removePlayer(player)
     

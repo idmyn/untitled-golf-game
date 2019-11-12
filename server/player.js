@@ -24,20 +24,33 @@ function Player(socket, gameId, ball) {
   this.playerName = function(){
     return this.name ? this.name : this.id
   }
+  
+  this.findGame = function(){
+    return Game.all[this.gameId]
+  }
+
+  this.initPlayer = function(){
+    const game = this.findGame()
+    this.socket.emit('initPlayer', {playerId: this.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+  }
+  
 }
 
 Player.all = {}
 
+
+
 Player.onConnect = (socket, game) => {
-  const ball = game.createBall()
+  let ball = game.createBall()
   const player = new Player(socket, game.id, ball)
 
-  socket.emit('initPlayer', {playerId: player.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+  player.initPlayer()
 
   socket.on('mouseClick', (packet) => {
+    ball = player.ball
     if (ball.speed < 0.1) {
       player.shots++
-      game.mouseClicked(ball, packet)
+      player.findGame().mouseClicked(ball, packet)
     }
   })
 
@@ -45,6 +58,7 @@ Player.onConnect = (socket, game) => {
     const game = Player.joinNextAvailableGame()
     const player = Player.getPlayerBySocketId(socket.id)
     player.gameId = game.id
+    player.initPlayer()
     player.potted = false
     player.shots = 0
     player.ball = game.createBall()
@@ -89,16 +103,6 @@ Player.getPlayerBySocketId = function(socketId){
     }
   }
 }
-
-/*
-Player.gameWon = function(winningPlayer, game){
-  console.log("FAES")
-  game.players.forEach(player => {
-    player.socket.emit('gameWon', {winningPlayer: winningPlayer})
-  })
-  
-  console.log(Game.all)
-}*/
 
 Player.joinNextAvailableGame = function(){
   if(Object.keys(Game.all).length === 0){

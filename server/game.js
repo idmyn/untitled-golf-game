@@ -51,7 +51,6 @@ function Game() {
       this.players.forEach((player) =>{
         
         if(!player.potted){
-          console.log(player.id, player.potted)
           const ballPos = player.ball.position
           const shots = player.shots
           const name = player.name ? player.name : player.id
@@ -70,7 +69,6 @@ function Game() {
 
     function sendPackets(pack,players){
       players.forEach((player) =>{
-        console.log(pack)
         player.socket.emit('ballPositions', pack)
       })
     }
