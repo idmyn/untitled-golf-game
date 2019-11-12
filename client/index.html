@@ -10,6 +10,7 @@
     <script defer src="/client/script.js"></script>
   </head>
   <body>
+
     <div class="container mt-5">
       <div class="row">
         <div class="col-5 text-center">
@@ -17,8 +18,14 @@
             <canvas width="400" height="600" id="game"></canvas>
         </div>
         <div class="col-7 mt-5" id="sidebar">
+            <div id="chatbox-div">
+                <ul id="chatbox-messages">
+                </ul>
+                <form id="chatbox-form"><input name="message" placeholder="Enter Message"></input></form>
+              </div>
         </div>
       </div>
     </div>
+
   </body>
 </html>

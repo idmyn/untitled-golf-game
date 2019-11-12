@@ -16,6 +16,8 @@ function Game() {
     const engine = Engine.create()
     this.world = engine.world
     this.world.gravity.y = 0
+    this.players = []
+    this.messages = []
 
 
     Engine.run(engine)
@@ -109,6 +111,13 @@ function Game() {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
       player.socket.emit('playerWins', {won: true})
     }
+  }
+
+  this.sendMessage = function(message){
+    this.messages.push(message)
+    this.players.forEach(player => {
+      player.sendMessage(message)
+    })
   }
 }
 
