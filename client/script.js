@@ -1,8 +1,32 @@
 const socket = io()
 let mapObjects
 let mapHole
+///////////////////////////////////////////////////////////////////
+//chatbox
+const chatBoxForm = document.querySelector("#chatbox-form")
+const chatBoxMessages = document.querySelector('#chatbox-messages')
+
+chatBoxForm.onsubmit= (e) => {
+  e.preventDefault()
+  const message = e.target.querySelector('input[name="message"]').value
+  e.target.querySelector('input[name="message"').value = ""
+  socket.emit("newMessage", {socketId: socket.id, message: message})
+}
+
+socket.on('newMessage', (packet) =>{
+  displayMessage(packet.message)
+})
+
+function displayMessage(message){
+  const newMessage = document.createElement("li")
+  newMessage.innerText = message
+  chatBoxMessages.append(newMessage)
+}
+///////////////////////////////////////////////////////////////////
 
 socket.on('initPlayer', (packet) => {
+  packet.messages.forEach(message => displayMessage(message))
+
   const playerLabel = document.createElement('h2')
   playerLabel.textContent = `You are player ${packet.playerId}`
   document.querySelector('body').append(playerLabel)

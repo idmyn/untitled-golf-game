@@ -28,10 +28,19 @@ game.initMap()
 
 io.on('connection', function(socket) {
   const player = Player.onConnect(socket, game)
+  game.players.push(player)
   console.log('a user connected')
 
+  socket.on('newMessage', (packet) => {
+    const player = Player.getPlayerBySocketId(packet.socketId)
+    const newMessage = `${player.id}: ${packet.message}`  // in the future it would be nice if this was their name
+    game.sendMessage(newMessage)
+  })
+  
   socket.on('disconnect', () => {
     delete Player.all[player.id]
     console.log('a user disconnected')
   })
 })
+
+
