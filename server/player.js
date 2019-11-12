@@ -24,12 +24,17 @@ Player.onConnect = (socket, game) => {
 
   socket.emit('initPlayer', {playerId: player.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
 
-  socket.on('mouseClick', (packet) =>{
+  socket.on('mouseClick', (packet) => {
     if (ball.speed < 0.1) {
       player.shots++
       game.mouseClicked(ball, packet)
     }
   })
+
+  socket.on('login', (name) => {
+    console.log(name)
+  })
+
   return player
 }
 

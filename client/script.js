@@ -100,3 +100,10 @@ canvas.addEventListener('click', (e) => {
 
   socket.emit('mouseClick', mouseClickPos)
 })
+
+document.querySelector('form').addEventListener('submit', (e) => {
+  e.preventDefault()
+  const form = e.target
+  const name = form.querySelector('input[name="name"]').value
+  socket.emit('login', name)
+})
