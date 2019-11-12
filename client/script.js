@@ -3,10 +3,13 @@ let mapObjects
 let mapHole
 
 socket.on('initPlayer', (packet) => {
-  const h1 = document.createElement('h1')
-  const message = `You are player ${packet.playerId}`
-  h1.textContent = message
-  document.querySelector('body').append(h1)
+  const playerLabel = document.createElement('h2')
+  playerLabel.textContent = `You are player ${packet.playerId}`
+  document.querySelector('body').append(playerLabel)
+
+  const shotCount = document.createElement('h2')
+  shotCount.textContent = `You have taken 0 shots.`
+  document.querySelector('body').append(shotCount)
 
   mapObjects = packet.mapObjects
   mapHole = packet.hole
