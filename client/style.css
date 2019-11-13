@@ -24,3 +24,9 @@ canvas {
    top: -9999px;
    left: -9999px;
 }
+
+@media (max-width: 576px) {
+  #chatbox-div {
+    display: none
+  }
+}
