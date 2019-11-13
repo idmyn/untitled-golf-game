@@ -2,13 +2,13 @@ import Player from "./player.js";
 import Map from "./map.js";
 import Matter from "matter-js/build/matter.js";
 
-let count = 0
-
 const Engine = Matter.Engine,
   World = Matter.World,
   Bodies = Matter.Bodies,
   Body = Matter.Body,
   Vector = Matter.Vector
+
+let count = 0
 
 export default class Game {
   constructor() {
@@ -16,7 +16,8 @@ export default class Game {
     Game.all[this.id] = this
     count++
   }
-  initialize(){
+
+  initialize() {
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
     const engine = Engine.create()
     this.world = engine.world
@@ -26,11 +27,10 @@ export default class Game {
 
     Engine.run(engine)
 
-    const staticObj = {isStatic: true}
-    const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, staticObj),
-      bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, staticObj),
-      leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, staticObj),
-      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, staticObj)
+    const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, {isStatic: true}),
+      bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, {isStatic: true}),
+      leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, {isStatic: true}),
+      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, {isStatic: true})
 
     const bodies = [topWall, bottomWall, leftWall, rightWall]
     bodies.forEach(body => body.restitution = 0.6)
@@ -38,16 +38,17 @@ export default class Game {
     World.add(this.world, bodies)
   }
 
-  run(){
-    this.gameTickId = setInterval(() => {
+  run() {
+    this.gameTick = setInterval(() => {
       this.checkIfWon()
-      const pack = []
-      this.players.forEach((player) =>{
 
-        if(!player.potted){
+      const pack = []
+
+      this.players.forEach((player) => {
+        if (!player.potted) {
           const ballPos = player.ball.position
           const shots = player.shots
-          const name = player.playerName()
+          const name = player.playerName
           pack.push({
             [player.id]: {
               ballPos: ballPos,
@@ -68,12 +69,10 @@ export default class Game {
     })
   }
 
-  checkIfWon(){
-    if(this.players.length > 0){
-      this.players.every(player => player.potted === true) && this.finish()
-    }else{
-      delete Game.all[this.id]
-    }
+  checkIfWon() {
+    this.players.length
+      ? this.players.every(player => player.potted) && this.finish()
+      : delete Game.all[this.id]
   }
 
   createBall() {
@@ -114,25 +113,25 @@ export default class Game {
   }
 
   checkIfPotted(player) {
-    if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
+    if (distanceBetween(player.ball.position, this.holePos) < this.holeRadius
+        && player.ball.speed < 3) {
       World.remove(this.world, player.ball)
       player.potted = true
-      player.socket.emit('playerPots', {potted: true})
+      // player.socket.emit('playerPots', {})
     }
   }
 
   finish() {
-    clearInterval(this.gameTickId)
-    console.log('finished!!!!!')
+    clearInterval(this.gameTick)
 
     const pack = {}
     this.players.forEach(player => {
-      pack[player.playerName()] = {shots: player.shots}
+      pack[player.playerName] = {shots: player.shots}
     })
 
-    this.players.forEach(player => player.socket.emit('gameWon', pack))
-    setTimeout(()=>{
-      delete Game.all[this.id]},100)
+    this.sendPackets('gameWon', pack)
+
+    delete Game.all[this.id]
   }
 
   removePlayer(curPlayer){
@@ -140,8 +139,8 @@ export default class Game {
     World.remove(this.world, curPlayer.ball)
   }
 
-  sendMessages(packet, playerName){
-    const preparedMessage = `${playerName}: ${packet}`
+  sendMessages(pack, playerName){
+    const preparedMessage = `${playerName}: ${pack}`
 
     this.messages.push(preparedMessage)
 
@@ -151,7 +150,7 @@ export default class Game {
 
 Game.all = {}
 
-Game.newGame = function(){
+Game.newGame = function() {
   const game = new Game()
   const map = Map.map1()
   game.map = map
@@ -161,23 +160,24 @@ Game.newGame = function(){
   return game
 }
 
-Game.findOrCreateGame = function(){
-  if(Object.keys(this.all).length === 0){
-    return this.newGame()
-  } else {
-    for(const gameId in this.all){
+Game.findOrCreateGame = function() {
+  if (Object.keys(this.all).length) {
+    for (const gameId in this.all) {
+      // check if game is full?
       return this.all[gameId]
     }
+  } else {
+    return this.newGame()
   }
 }
 
 Game.handleMessage = function(packet,socketId){
   const player = Player.getPlayerBySocketId(socketId)
   const game = player.game
-  game.sendMessages(packet, player.playerName())
+  game.sendMessages(packet, player.playerName)
 }
 
-function distanceBetween(vectorA, vectorB) {
+const distanceBetween = (vectorA, vectorB) => {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }

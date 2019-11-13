@@ -20,7 +20,7 @@ export default class Player {
     return Game.all[this.gameId]
   }
 
-  playerName() {
+  get playerName() {
     return this.name ? this.name : this.id
   }
 
@@ -31,7 +31,7 @@ export default class Player {
 
     game.players.push(this)
 
-    this.socket.emit('initPlayer', {playerId: this.playerName(), hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+    this.socket.emit('initPlayer', {playerId: this.playerName, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
   }
 
   reset() {
