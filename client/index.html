@@ -20,14 +20,16 @@
 
         <div class="col-5 col-lg-5 mt-5" id="sidebar">
           <form id="login">
-            <label for="name">Login as:</label>
-            <input name="name" type="text" value=""/>
-            <input type="submit" value="log in"/>
+            <input name="name" placeholder="Enter username" type="text" value=""/>
+            <input type="submit" value="Log in"/>
           </form>
           <div id="player-info"></div>
           <div id="chatbox-div">
             <ul id="chatbox-messages"></ul>
-            <form id="chatbox-form"><input name="message" placeholder="Enter Message"></input></form>
+            <form id="chatbox-form">
+              <input name="message" placeholder="Enter message" />
+              <input type="submit" value="Send"/>
+            </form>
           </div>
         </div>
 
