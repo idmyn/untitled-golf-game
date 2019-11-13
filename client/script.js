@@ -128,9 +128,9 @@ socket.on('successfulLogin', (packet) => {
 
 
 socket.on('gameWon', (packet)=>{
-  // document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
+  document.querySelector('main').classList.add('hide')
   const ul = document.createElement('ul')
-  ul.id = 'scoreboard'
+  ul.id = 'scorelist'
 
   for (const playerName in packet) {
     const li = document.createElement('li')
@@ -143,7 +143,11 @@ socket.on('gameWon', (packet)=>{
   button.textContent = 'Join new game'
   button.addEventListener('click', () => {
     socket.emit('playAgain')
+    scoreboard.remove()
+    document.querySelector('main').classList.remove('hide')
   })
 
-  document.body.append(ul, button)
+  const scoreboard = document.createElement('div')
+  scoreboard.append(ul, button)
+  document.querySelector('.container-fluid').append(scoreboard)
 })
