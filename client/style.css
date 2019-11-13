@@ -19,10 +19,6 @@ ul {
   list-style: none
 }
 
-/* #sidebar * + * { */
-/*   margin-top: 2rem; */
-/* } */
-
 .hide {
    position: absolute;
    top: -9999px;
