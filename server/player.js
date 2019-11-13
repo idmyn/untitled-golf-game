@@ -15,16 +15,16 @@ export default class Player {
     Player.all[this.id] = this
     count++
   }
-  
+
   get game() {
     return Game.all[this.gameId]
   }
 
-  playerName(){
+  playerName() {
     return this.name ? this.name : this.id
   }
 
-  joinGame(){
+  joinGame() {
     const game = Game.findOrCreateGame()
     this.gameId = game.id
     this.ball = game.createBall()
@@ -34,13 +34,13 @@ export default class Player {
     this.socket.emit('initPlayer', {playerId: this.playerName(), hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
   }
 
-  reset(){
+  reset() {
     this.potted = false
     this.shots = 0
   }
 
-  disconnect(){
-    delete Player.all[this.id] // Are we deleting the instance
+  disconnect() {
+    delete Player.all[this.id]
   }
 }
 
@@ -60,7 +60,7 @@ Player.onConnect = (socket) => {
 
   socket.on('playAgain', () => {
     const player = Player.getPlayerBySocketId(socket.id)
-    
+
     player.reset()
     player.joinGame()
   })
@@ -68,10 +68,10 @@ Player.onConnect = (socket) => {
   socket.on('login', (name) => {
     const player = Player.getPlayerBySocketId(socket.id)
 
-    User.find({name: name}, function(err, user){
+    User.find({name: name}, (err, user) => {
       if(err) throw err
 
-      if(user.length > 0){
+      if(user.length > 0) {
         player.name = user[0].name
         socket.emit('successfulLogin', {
           name: player.name
@@ -81,7 +81,7 @@ Player.onConnect = (socket) => {
           name: name
         })
 
-        playerToSave.save(function(err, user){
+        playerToSave.save((err, user) => {
           if(err) throw err
           player.name = user.name
           socket.emit('successfulLogin', {
@@ -95,7 +95,7 @@ Player.onConnect = (socket) => {
   return player
 }
 
-Player.getPlayerBySocketId = function(socketId){
+Player.getPlayerBySocketId = function(socketId) {
   for(const playerId in Player.all){
     if(Player.all[playerId].socket.id === socketId){
       return Player.all[playerId]
@@ -103,9 +103,8 @@ Player.getPlayerBySocketId = function(socketId){
   }
 }
 
-Player.handleDisconnect = function(socketId){
+Player.handleDisconnect = function(socketId) {
   const player = this.getPlayerBySocketId(socketId)
   player.game && player.game.removePlayer(player)
   player.disconnect()
 }
-
