@@ -1,6 +1,7 @@
 //temp
-import User from "../db/schema.js";
-import Game from "./game.js";
+import Schema from "../db/schema.js"
+import Game from "./game.js"
+const User = Schema.User
 
 let count = 0
 
@@ -24,8 +25,8 @@ export default class Player {
     return this.name ? this.name : this.id
   }
 
-  joinGame() {
-    const game = Game.findOrCreateGame()
+  async joinGame() {
+    const game = await Game.findOrCreateGame()
     this.gameId = game.id
     this.ball = game.createBall()
 

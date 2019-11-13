@@ -5,6 +5,13 @@ const userScehma = new Schema({
   name: String
 })
 
-const User = mongoose.model('User', userScehma)
+const mapSchema = new Schema({
+  mapObjects: Array,
+  hole: Object
+})
 
-export default User
+const User = mongoose.model('User', userScehma)
+const MapSchema = mongoose.model('Map', mapSchema)
+
+
+export default { User, MapSchema }

@@ -150,24 +150,26 @@ export default class Game {
 
 Game.all = {}
 
-Game.newGame = function() {
+Game.newGame = async function() {
+  const respMaps = await Map.getRandomMap()
+  console.log(respMaps)
+
   const game = new Game()
-  const map = Map.map1()
-  game.map = map
+  game.map = respMaps[0]
   game.initialize()
   game.run()
   game.initMap()
   return game
 }
 
-Game.findOrCreateGame = function() {
+Game.findOrCreateGame = async function() {
   if (Object.keys(this.all).length) {
     for (const gameId in this.all) {
       // check if game is full?
       return this.all[gameId]
     }
   } else {
-    return this.newGame()
+    return await this.newGame()
   }
 }
 
