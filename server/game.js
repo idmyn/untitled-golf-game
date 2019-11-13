@@ -126,6 +126,7 @@ export default class Game {
 
     const pack = {}
     this.players.forEach(player => {
+      player.persistStats(this)
       pack[player.playerName] = {shots: player.shots}
     })
 

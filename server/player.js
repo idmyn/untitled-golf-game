@@ -43,6 +43,26 @@ export default class Player {
   disconnect() {
     delete Player.all[this.id]
   }
+
+  persistStats(game){
+    const playerName = this.playerName
+  
+    User.findOne({name: playerName}, (err, user)=>{
+      if(err) throw err
+      
+      if(user){
+        const playerShots = this.shots
+        const gameMap = game.map.id
+        const newStats = user.stats
+        newStats.push({[gameMap]: playerShots})
+        
+        User.findByIdAndUpdate(user._id, { $push: { stats: newStats }},(err)=>{
+          if(err) throw err
+        })
+      }
+    })
+
+  }
 }
 
 Player.all = {}

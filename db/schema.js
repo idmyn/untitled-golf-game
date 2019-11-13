@@ -2,7 +2,8 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const userScehma = new Schema({
-  name: String
+  name: String,
+  stats: Array
 })
 
 const mapSchema = new Schema({
