@@ -1,7 +1,6 @@
-import MapObject from "./mapObject.js"
 import Schema from "../db/schema.js"
 const MapSchema = Schema.MapSchema
-
+let count = 0
 export default class Map {
   constructor(id,mapObjects,hole) {
     this.id = id
@@ -13,7 +12,7 @@ export default class Map {
 
   pushToDB(){
     const newMap = new MapSchema({mapObjects: this.mapObjects, hole: this.hole})
-    newMap.save((err,map)=>{
+    newMap.save((err)=>{
       if(err) throw err
     })
   }
@@ -22,27 +21,21 @@ export default class Map {
 Map.all = {}
 
 Map.getRandomMap = async function(){
-  return MapSchema.find((err,maps)=>{
+  const maps = await MapSchema.find((err)=>{
     if(err) throw err
-    if(maps){
-      return Map.unpackFromDB(maps[0])
-    }
   })
-  
+  return this.unpackFromDB(randomElement(maps))
 }
 
 Map.unpackFromDB = function(newMap){ 
-  return new Map(newMap._id,newMap.mapObjects, newMap.hole)
+  return new Map(newMap._id, newMap.mapObjects, newMap.hole)
 }
 
-Map.map1 = function(){
-  const obj1 = new MapObject(100, 100, 200, 20)
-  const obj2 = new MapObject(100, 300, 200, 20)
-  const obj3 = new MapObject(100, 500, 200, 20)
- 
-  const hole =  {x:200,y:50,radius:20}
-  const testMap = new Map(0,[obj1,obj2,obj3],hole)
-  //testMap.pushToDB()
 
-  return testMap
+const randomElement = (array) => {
+  const rand = Math.floor(Math.random() * array.length)
+  return array[rand]
 }
+
+
+

@@ -152,10 +152,9 @@ Game.all = {}
 
 Game.newGame = async function() {
   const respMaps = await Map.getRandomMap()
-  console.log(respMaps)
 
   const game = new Game()
-  game.map = respMaps[0]
+  game.map = respMaps
   game.initialize()
   game.run()
   game.initMap()
