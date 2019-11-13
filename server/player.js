@@ -31,7 +31,7 @@ function Player(socket, gameId, ball) {
 
   this.initPlayer = function(){
     const game = this.findGame()
-    this.socket.emit('initPlayer', {playerId: this.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+    this.socket.emit('initPlayer', {playerId: this.playerName(), hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
   }
   
 }
