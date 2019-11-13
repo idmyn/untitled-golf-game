@@ -1,44 +1,42 @@
-
 //temp
 import User from "../db/schema.js";
 import Game from "./game.js";
 
-
 let count = 0
 
-export default function Player(socket, gameId, ball) {
-  this.id = count
-  this.socket = socket
-  this.gameId = gameId
-  this.ball = ball
-  this.potted = false
-  this.shots = 0
+export default class Player {
 
-  Player.all[this.id] = this
-  count++
+  constructor(socket, gameId, ball) {
+    this.id = count
+    this.socket = socket
+    this.gameId = gameId
+    this.ball = ball
+    this.potted = false
+    this.shots = 0
 
-  this.sendMessage = function(message){
+    Player.all[this.id] = this
+    count++
+  }
+
+  sendMessage(message) {
     socket.emit('newMessage', {message: message})
   }
 
-  this.playerName = function(){
+  playerName(){
     return this.name ? this.name : this.id
   }
-  
-  this.findGame = function(){
+
+  findGame(){
     return Game.all[this.gameId]
   }
 
-  this.initPlayer = function(){
+  initPlayer(){
     const game = this.findGame()
     this.socket.emit('initPlayer', {playerId: this.playerName(), hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
   }
-  
 }
 
 Player.all = {}
-
-
 
 Player.onConnect = (socket, game) => {
   let ball = game.createBall()
@@ -104,7 +102,7 @@ Player.getPlayerBySocketId = function(socketId){
   }
 }
 
-Player.joinNextAvailableGame = function(){ 
+Player.joinNextAvailableGame = function(){
   if(Object.keys(Game.all).length === 0){
     return Game.newGame()
   }else{
