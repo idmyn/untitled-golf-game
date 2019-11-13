@@ -1,6 +1,7 @@
 env:
   browser: true
   node: true
+sourceType: module
 extends: 'eslint:recommended'
 parserOptions:
   ecmaVersion: 6
