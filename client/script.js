@@ -25,8 +25,18 @@ function displayMessage(message){
 }
 ///////////////////////////////////////////////////////////////////
 
+function clearPlayerInfo() {
+  const playerInfo = document.querySelector('#player-info')
+  while (playerInfo.firstChild) {
+    playerInfo.removeChild(playerInfo.firstChild)
+  }
+}
+
 socket.on('initPlayer', (packet) => {
   packet.messages.forEach(message => displayMessage(message))
+
+  // clear any previous player info still hanging around
+  clearPlayerInfo()
 
   const playerLabel = document.createElement('h2')
   playerLabel.id = 'playerName'
@@ -89,7 +99,7 @@ socket.on('ballPositions', (pack)=> {
   })
 })
 
-socket.on('playerWins', () => {alert('YOU WIN')} )
+socket.on('playerPots', () => {} )
 
 canvas.addEventListener('click', (e) => {
   // https://stackoverflow.com/a/17130415
@@ -118,5 +128,24 @@ socket.on('successfulLogin', (packet) => {
 
 
 socket.on('gameWon', (packet)=>{
-  document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
+  // document.body.innerText = "THE WINNER IS: " + packet.winningPlayer
+  const ul = document.createElement('ul')
+  ul.id = 'scoreboard'
+
+  for (const playerName in packet) {
+    const li = document.createElement('li')
+    li.textContent = `${playerName} - ${packet[playerName].shots} shots`
+    ul.append(li)
+  }
+
+  const button = document.createElement('button')
+  button.id = 'playAgain'
+  button.textContent = 'Join new game'
+  button.addEventListener('click', () => {
+    socket.emit('playAgain')
+    // should there be a new socket listener for newGameStart?
+    clearPlayerInfo()
+  })
+
+  document.body.append(ul, button)
 })

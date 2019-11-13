@@ -1,14 +1,17 @@
 module.exports = Player
 //temp
 const User = require('../db/schema')
+const Game = require('./game')
 
 
 let count = 0
 
-function Player(socket, ball) {
+function Player(socket, gameId, ball) {
   this.id = count
   this.socket = socket
+  this.gameId = gameId
   this.ball = ball
+  this.potted = false
   this.shots = 0
 
   Player.all[this.id] = this
@@ -21,21 +24,46 @@ function Player(socket, ball) {
   this.playerName = function(){
     return this.name ? this.name : this.id
   }
+  
+  this.findGame = function(){
+    return Game.all[this.gameId]
+  }
+
+  this.initPlayer = function(){
+    const game = this.findGame()
+    this.socket.emit('initPlayer', {playerId: this.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+  }
+  
 }
 
 Player.all = {}
 
-Player.onConnect = (socket, game) => {
-  const ball = game.createBall()
-  const player = new Player(socket, ball)
 
-  socket.emit('initPlayer', {playerId: player.id, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+
+Player.onConnect = (socket, game) => {
+  let ball = game.createBall()
+  const player = new Player(socket, game.id, ball)
+
+  player.initPlayer()
 
   socket.on('mouseClick', (packet) => {
+    ball = player.ball
     if (ball.speed < 0.1) {
       player.shots++
-      game.mouseClicked(ball, packet)
+      player.findGame().mouseClicked(ball, packet)
     }
+  })
+
+  socket.on('playAgain', () => {
+    const game = Player.joinNextAvailableGame()
+    const player = Player.getPlayerBySocketId(socket.id)
+    player.gameId = game.id
+    player.initPlayer()
+    player.potted = false
+    player.shots = 0
+    player.ball = game.createBall()
+    game.players.push(player)
+
   })
 
   socket.on('login', (name) => {
@@ -65,7 +93,6 @@ Player.onConnect = (socket, game) => {
     })
   })
 
-
   return player
 }
 
@@ -77,9 +104,12 @@ Player.getPlayerBySocketId = function(socketId){
   }
 }
 
-Player.gameWon = function(winningPlayer, game){
-  game.players.forEach(player => {
-    player.socket.emit('gameWon', {winningPlayer: winningPlayer})
-  })
+Player.joinNextAvailableGame = function(){
+  if(Object.keys(Game.all).length === 0){
+    return Game.newGame()
+  }else{
+    for(const gameId in Game.all){
+      return Game.all[gameId]
+    }
+  }
 }
-

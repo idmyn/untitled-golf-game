@@ -1,8 +1,9 @@
 module.exports = Game
 
 const Player = require('./player')
-
+const Map = require('./map')
 const Matter = require('matter-js/build/matter.js')
+let count = 0
 
 const Engine = Matter.Engine,
   World = Matter.World,
@@ -11,6 +12,7 @@ const Engine = Matter.Engine,
   Vector = Matter.Vector
 
 function Game() {
+  this.id = count
   this.initialize = () => {
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
     const engine = Engine.create()
@@ -18,6 +20,7 @@ function Game() {
     this.world.gravity.y = 0
     this.players = []
     this.messages = []
+    
 
 
     Engine.run(engine)
@@ -41,31 +44,33 @@ function Game() {
   }
 
   this.run = () => {
+   
     this.gameTickId = setInterval(() => {
-      console.log(this.players.length)
+
       const pack = []
-      for (const playerId in Player.all) {
-        const player = Player.all[playerId]
-        const ballPos = player.ball.position
-        const shots = player.shots
-        const name = player.name ? player.name : player.id
-        pack.push({
-          [playerId]: {
-            ballPos: ballPos,
-            shots: shots,
-            name: name
-          }
-        })
-        this.checkIfWin(player)
-      }
-      sendPackets(pack)
+      this.players.forEach((player) =>{
+        
+        if(!player.potted){
+          const ballPos = player.ball.position
+          const shots = player.shots
+          const name = player.name ? player.name : player.id
+          pack.push({
+            [player.id]: {
+              ballPos: ballPos,
+              shots: shots,
+              name: name
+            }
+          })
+          this.checkIfPotted(player)
+        }
+      })
+      sendPackets(pack,this.players)
     }, 1000/25)
 
-    function sendPackets(pack){
-      for(const playerId in Player.all){
-        const player = Player.all[playerId]
+    function sendPackets(pack,players){
+      players.forEach((player) =>{
         player.socket.emit('ballPositions', pack)
-      }
+      })
     }
   }
 
@@ -108,13 +113,32 @@ function Game() {
 
   }
 
-  this.checkIfWin = function(player) {
+  this.checkIfPotted = function(player) {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
-      player.socket.emit('playerWins', {won: true})
-      Player.gameWon(player.playerName(),this)
-      clearInterval(this.gameTickId)
+      World.remove(this.world, player.ball)
+      player.potted = true
+      player.socket.emit('playerPots', {potted: true})
+      this.players.every(player => player.potted === true) && this.finish()
     }
   }
+
+  this.finish = function() {
+    console.log('finished!!!!!')
+
+    const winPacket = {
+    }
+
+    this.players.forEach(player => {
+      winPacket[player.playerName()] = {shots: player.shots}
+    })
+
+    this.players.forEach(player => player.socket.emit('gameWon', winPacket))
+    setTimeout(()=>{
+      clearInterval(this.gameTickId)
+
+      delete Game.all[this.id]},100)
+  }
+
 
   this.sendMessage = function(message){
     this.messages.push(message)
@@ -122,12 +146,26 @@ function Game() {
       player.sendMessage(message)
     })
   }
-  
+
   this.removePlayer = function(curPlayer){
     this.players = this.players.filter(player => player != curPlayer)
     World.remove(this.world, curPlayer.ball)
     delete Player.all[curPlayer.id]
   }
+  Game.all[this.id] = this
+  count++
+}
+
+Game.all = {}
+
+Game.newGame = function(){
+  const game = new Game()
+  const map = Map.map1()
+  game.map = map
+  game.initialize()
+  game.run()
+  game.initMap()
+  return game
 }
 
 function distanceBetween(vectorA, vectorB) {
