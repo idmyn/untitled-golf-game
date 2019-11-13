@@ -35,8 +35,10 @@ io.on('connection', function(socket) {
   
   socket.on('disconnect', () => {
     const player = Player.getPlayerBySocketId(socket.id)
-    const game = Game.all[player.gameId]
-    game.removePlayer(player)
+    if(Game.all[player.gameId]){
+      const game = Game.all[player.gameId]
+      game.removePlayer(player)
+    }
     
     console.log('a user disconnected')
   })
