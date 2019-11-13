@@ -53,7 +53,7 @@ function Game() {
         if(!player.potted){
           const ballPos = player.ball.position
           const shots = player.shots
-          const name = player.name ? player.name : player.id
+          const name = player.playerName()
           pack.push({
             [player.id]: {
               ballPos: ballPos,
@@ -156,7 +156,7 @@ function Game() {
   this.removePlayer = function(curPlayer){
     this.players = this.players.filter(player => player != curPlayer)
     World.remove(this.world, curPlayer.ball)
-    delete Player.all[curPlayer.id]
+    delete Player.all[curPlayer.id] // Are we deleting the instance
   }
   Game.all[this.id] = this
   count++
