@@ -24,8 +24,6 @@ export default class Game {
     this.players = []
     this.messages = []
 
-
-
     Engine.run(engine)
 
     const staticObj = {isStatic: true}
@@ -38,16 +36,9 @@ export default class Game {
     bodies.forEach(body => body.restitution = 0.6)
 
     World.add(this.world, bodies)
-
-    // function updateMatter(){
-    //   Matter.Events.trigger(engine, 'tick', { timestamp: engine.timing.timestamp })
-    //   Matter.Engine.update(engine, engine.timing.delta)
-    //   Matter.Events.trigger(engine, 'afterTick', { timestamp: engine.timing.timestamp })
-    // }
   }
 
   run(){
-
     this.gameTickId = setInterval(() => {
       this.checkIfWon()
       const pack = []
@@ -120,7 +111,6 @@ export default class Game {
     for(const mapObjectId in mapObjects){
       this.createRect(mapObjects[mapObjectId])
     }
-
   }
 
   checkIfPotted(player) {
@@ -135,14 +125,12 @@ export default class Game {
     clearInterval(this.gameTickId)
     console.log('finished!!!!!')
 
-    const winPacket = {
-    }
-
+    const pack = {}
     this.players.forEach(player => {
-      winPacket[player.playerName()] = {shots: player.shots}
+      pack[player.playerName()] = {shots: player.shots}
     })
 
-    this.players.forEach(player => player.socket.emit('gameWon', winPacket))
+    this.players.forEach(player => player.socket.emit('gameWon', pack))
     setTimeout(()=>{
       delete Game.all[this.id]},100)
   }
@@ -154,7 +142,7 @@ export default class Game {
 
   sendMessages(packet, playerName){
     const preparedMessage = `${playerName}: ${packet}`
-    
+
     this.messages.push(preparedMessage)
 
     this.sendPackets('newMessage', preparedMessage)
@@ -176,7 +164,7 @@ Game.newGame = function(){
 Game.findOrCreateGame = function(){
   if(Object.keys(this.all).length === 0){
     return this.newGame()
-  }else{
+  } else {
     for(const gameId in this.all){
       return this.all[gameId]
     }
@@ -189,11 +177,7 @@ Game.handleMessage = function(packet,socketId){
   game.sendMessages(packet, player.playerName())
 }
 
-
-
 function distanceBetween(vectorA, vectorB) {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }
-
-
