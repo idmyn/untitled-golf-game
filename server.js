@@ -4,38 +4,30 @@ const http = require('http').createServer(app)
 const db = require('./db/database')
 app.use('/client', express.static('client'))
 
+http.listen(3000, function() {
+  console.log('listening on *:3000')
+})
+
 const io = require('socket.io')(http)
 
 db()
 
 const Player = require('./server/player')
 const Game = require('./server/game')
-const Map = require('./server/map')
-
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html')
 })
 
-http.listen(3000, function() {
-  console.log('listening on *:3000')
-})
-
-// Start a game on server start
-const game = new Game()
-const map = Map.map1()
-game.map = map
-game.initialize()
-game.run()
-game.initMap()
-
 io.on('connection', function(socket) {
+  const game = Player.joinNextAvailableGame()
   const player = Player.onConnect(socket, game)
   game.players.push(player)
   console.log('a user connected')
 
   socket.on('newMessage', (packet) => {
     const player = Player.getPlayerBySocketId(packet.socketId)
+    const game = Game.all[player.gameId]
     const playerName = player.name ? player.name : player.id
     const newMessage = `${playerName}: ${packet.message}`
     game.sendMessage(newMessage)
@@ -43,7 +35,10 @@ io.on('connection', function(socket) {
   
   socket.on('disconnect', () => {
     const player = Player.getPlayerBySocketId(socket.id)
-    game.removePlayer(player)
+    if(Game.all[player.gameId]){
+      const game = Game.all[player.gameId]
+      game.removePlayer(player) //remove game if empty
+    }
     
     console.log('a user disconnected')
   })

@@ -1,8 +1,9 @@
 module.exports = Game
 
 const Player = require('./player')
-
+const Map = require('./map')
 const Matter = require('matter-js/build/matter.js')
+let count = 0
 
 const Engine = Matter.Engine,
   World = Matter.World,
@@ -11,6 +12,7 @@ const Engine = Matter.Engine,
   Vector = Matter.Vector
 
 function Game() {
+  this.id = count
   this.initialize = () => {
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
     const engine = Engine.create()
@@ -18,6 +20,7 @@ function Game() {
     this.world.gravity.y = 0
     this.players = []
     this.messages = []
+    
 
 
     Engine.run(engine)
@@ -41,13 +44,16 @@ function Game() {
   }
 
   this.run = () => {
+   
     this.gameTickId = setInterval(() => {
+      this.checkIfWon()
       const pack = []
       this.players.forEach((player) =>{
+        
         if(!player.potted){
           const ballPos = player.ball.position
           const shots = player.shots
-          const name = player.name ? player.name : player.id
+          const name = player.playerName()
           pack.push({
             [player.id]: {
               ballPos: ballPos,
@@ -65,6 +71,14 @@ function Game() {
       players.forEach((player) =>{
         player.socket.emit('ballPositions', pack)
       })
+    }
+  }
+
+  this.checkIfWon = function(){
+    if(this.players.length > 0){
+      this.players.every(player => player.potted === true) && this.finish()
+    }else{
+      delete Game.all[this.id]
     }
   }
 
@@ -112,13 +126,12 @@ function Game() {
       World.remove(this.world, player.ball)
       player.potted = true
       player.socket.emit('playerPots', {potted: true})
-      this.players.every(player => player.potted === true) && this.finish()
     }
   }
 
   this.finish = function() {
+    clearInterval(this.gameTickId)
     console.log('finished!!!!!')
-    console.log(this)
 
     const winPacket = {
     }
@@ -128,7 +141,8 @@ function Game() {
     })
 
     this.players.forEach(player => player.socket.emit('gameWon', winPacket))
-    clearInterval(this.gameTickId)
+    setTimeout(()=>{
+      delete Game.all[this.id]},100)
   }
 
 
@@ -142,8 +156,22 @@ function Game() {
   this.removePlayer = function(curPlayer){
     this.players = this.players.filter(player => player != curPlayer)
     World.remove(this.world, curPlayer.ball)
-    delete Player.all[curPlayer.id]
+    delete Player.all[curPlayer.id] // Are we deleting the instance
   }
+  Game.all[this.id] = this
+  count++
+}
+
+Game.all = {}
+
+Game.newGame = function(){
+  const game = new Game()
+  const map = Map.map1()
+  game.map = map
+  game.initialize()
+  game.run()
+  game.initMap()
+  return game
 }
 
 function distanceBetween(vectorA, vectorB) {
