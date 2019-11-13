@@ -27,16 +27,14 @@ io.on('connection', function(socket) {
   Player.onConnect(socket)
 
   console.log('a user connected')
-  
+
   socket.on('newMessage', (pack) => {
     Game.handleMessage(pack, socket.id)
   })
-  
+
   socket.on('disconnect', () => {
     Player.handleDisconnect(socket.id)
-  
+
     console.log('a user disconnected')
   })
 })
-
-
