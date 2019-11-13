@@ -26,9 +26,13 @@ function displayMessage(message){
 ///////////////////////////////////////////////////////////////////
 
 function clearPlayerInfo() {
-  const playerInfo = document.querySelector('#player-info')
-  while (playerInfo.firstChild) {
-    playerInfo.removeChild(playerInfo.firstChild)
+  const playerName = document.querySelector('#player-name')
+  while (playerName.firstChild) {
+    playerName.removeChild(playerName.firstChild)
+  }
+  const playerShots = document.querySelector('#player-shots')
+  while (playerShots.firstChild) {
+    playerShots.removeChild(playerShots.firstChild)
   }
 }
 
@@ -41,12 +45,12 @@ socket.on('initPlayer', (packet) => {
   const playerLabel = document.createElement('h2')
   playerLabel.id = 'playerName'
   playerLabel.textContent = `You are player ${packet.playerId}`
-  document.querySelector('#player-info').append(playerLabel)
+  document.querySelector('#player-name').append(playerLabel)
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots`
   shotCount.id = 'shotCount'
-  document.querySelector('#player-info').append(shotCount)
+  document.querySelector('#player-shots').append(shotCount)
 
   mapObjects = packet.mapObjects
   mapHole = packet.hole
