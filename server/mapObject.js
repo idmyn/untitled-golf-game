@@ -1,4 +1,3 @@
-
 let count = 0
 
 export default class MapObject{
@@ -7,16 +6,12 @@ export default class MapObject{
     this.x = x
     this.y = y
     this.width = width
-    this.height = height  
+    this.height = height
 
     count++
   }
-
-
-  
 
   addToMap(map) {
     map.mapObjects.push(this)
   }
 }
-
