@@ -67,14 +67,14 @@ export default class Game {
           this.checkIfPotted(player)
         }
       })
-      sendPackets(pack,this.players)
+      this.sendPackets("ballPositions",pack)
     }, 1000/25)
+  }
 
-    function sendPackets(pack,players){
-      players.forEach((player) =>{
-        player.socket.emit('ballPositions', pack)
-      })
-    }
+  sendPackets(packName, pack){
+    this.players.forEach((player) =>{
+      player.socket.emit(packName, pack)
+    })
   }
 
   checkIfWon(){
@@ -147,18 +147,17 @@ export default class Game {
       delete Game.all[this.id]},100)
   }
 
-
-  sendMessage(message){
-    this.messages.push(message)
-    this.players.forEach(player => {
-      player.sendMessage(message)
-    })
-  }
-
   removePlayer(curPlayer){
     this.players = this.players.filter(player => player != curPlayer)
     World.remove(this.world, curPlayer.ball)
-    delete Player.all[curPlayer.id] // Are we deleting the instance
+  }
+
+  sendMessages(packet, playerName){
+    const preparedMessage = `${playerName}: ${packet}`
+    
+    this.messages.push(preparedMessage)
+
+    this.sendPackets('newMessage', preparedMessage)
   }
 }
 
@@ -174,7 +173,27 @@ Game.newGame = function(){
   return game
 }
 
+Game.findOrCreateGame = function(){
+  if(Object.keys(this.all).length === 0){
+    return this.newGame()
+  }else{
+    for(const gameId in this.all){
+      return this.all[gameId]
+    }
+  }
+}
+
+Game.handleMessage = function(packet,socketId){
+  const player = Player.getPlayerBySocketId(socketId)
+  const game = player.game
+  game.sendMessages(packet, player.playerName())
+}
+
+
+
 function distanceBetween(vectorA, vectorB) {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
 }
+
+

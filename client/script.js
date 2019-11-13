@@ -11,11 +11,11 @@ chatBoxForm.onsubmit= (e) => {
   e.preventDefault()
   const message = e.target.querySelector('input[name="message"]').value
   e.target.querySelector('input[name="message"').value = ''
-  socket.emit('newMessage', {socketId: socket.id, message: message})
+  socket.emit('newMessage', message)
 }
 
-socket.on('newMessage', (packet) =>{
-  displayMessage(packet.message)
+socket.on('newMessage', (pack) =>{
+  displayMessage(pack)
 })
 
 function displayMessage(message){

@@ -6,62 +6,63 @@ let count = 0
 
 export default class Player {
 
-  constructor(socket, gameId, ball) {
+  constructor(socket) {
     this.id = count
     this.socket = socket
-    this.gameId = gameId
-    this.ball = ball
     this.potted = false
     this.shots = 0
 
     Player.all[this.id] = this
     count++
   }
-
-  sendMessage(message) {
-    socket.emit('newMessage', {message: message})
+  
+  get game() {
+    return Game.all[this.gameId]
   }
 
   playerName(){
     return this.name ? this.name : this.id
   }
 
-  findGame(){
-    return Game.all[this.gameId]
+  joinGame(){
+    const game = Game.findOrCreateGame()
+    this.gameId = game.id
+    this.ball = game.createBall()
+
+    game.players.push(this)
+
+    this.socket.emit('initPlayer', {playerId: this.playerName(), hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
   }
 
-  initPlayer(){
-    const game = this.findGame()
-    this.socket.emit('initPlayer', {playerId: this.playerName(), hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+  reset(){
+    this.potted = false
+    this.shots = 0
+  }
+
+  disconnect(){
+    delete Player.all[this.id] // Are we deleting the instance
   }
 }
 
 Player.all = {}
 
-Player.onConnect = (socket, game) => {
-  let ball = game.createBall()
-  const player = new Player(socket, game.id, ball)
+Player.onConnect = (socket) => {
+  const player = new Player(socket)
 
-  player.initPlayer()
+  player.joinGame()
 
   socket.on('mouseClick', (packet) => {
-    ball = player.ball
-    if (ball.speed < 0.1) {
+    if (player.ball.speed < 0.1) {
       player.shots++
-      player.findGame().mouseClicked(ball, packet)
+      player.game.mouseClicked(player.ball, packet)
     }
   })
 
   socket.on('playAgain', () => {
-    const game = Player.joinNextAvailableGame()
     const player = Player.getPlayerBySocketId(socket.id)
-    player.gameId = game.id
-    player.initPlayer()
-    player.potted = false
-    player.shots = 0
-    player.ball = game.createBall()
-    game.players.push(player)
-
+    
+    player.reset()
+    player.joinGame()
   })
 
   socket.on('login', (name) => {
@@ -102,12 +103,9 @@ Player.getPlayerBySocketId = function(socketId){
   }
 }
 
-Player.joinNextAvailableGame = function(){
-  if(Object.keys(Game.all).length === 0){
-    return Game.newGame()
-  }else{
-    for(const gameId in Game.all){
-      return Game.all[gameId]
-    }
-  }
+Player.handleDisconnect = function(socketId){
+  const player = this.getPlayerBySocketId(socketId)
+  player.game && player.game.removePlayer(player)
+  player.disconnect()
 }
+
