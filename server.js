@@ -13,17 +13,17 @@ const server = http.createServer(app)
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const io = socketio(server)
 
-server.listen(3000, function() {
+server.listen(3000, () => {
   console.log('listening on *:3000')
 })
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/index.html')
 })
 
 app.use('/client', express.static('client'))
 
-io.on('connection', function(socket) {
+io.on('connection', (socket) => {
   Player.onConnect(socket)
 
   console.log('a user connected')
