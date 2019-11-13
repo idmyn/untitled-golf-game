@@ -4,6 +4,10 @@ const http = require('http').createServer(app)
 const db = require('./db/database')
 app.use('/client', express.static('client'))
 
+http.listen(3000, function() {
+  console.log('listening on *:3000')
+})
+
 const io = require('socket.io')(http)
 
 db()
@@ -13,10 +17,6 @@ const Game = require('./server/game')
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html')
-})
-
-http.listen(3000, function() {
-  console.log('listening on *:3000')
 })
 
 io.on('connection', function(socket) {
@@ -35,8 +35,10 @@ io.on('connection', function(socket) {
   
   socket.on('disconnect', () => {
     const player = Player.getPlayerBySocketId(socket.id)
-    const game = Game.all[player.gameId]
-    game.removePlayer(player)
+    if(Game.all[player.gameId]){
+      const game = Game.all[player.gameId]
+      game.removePlayer(player) //remove game if empty
+    }
     
     console.log('a user disconnected')
   })

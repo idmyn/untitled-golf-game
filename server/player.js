@@ -104,7 +104,7 @@ Player.getPlayerBySocketId = function(socketId){
   }
 }
 
-Player.joinNextAvailableGame = function(){
+Player.joinNextAvailableGame = function(){ 
   if(Object.keys(Game.all).length === 0){
     return Game.newGame()
   }else{
