@@ -15,9 +15,9 @@ canvas {
   max-width: 90%;
 }
 
-#sidebar * + * {
-  margin-top: 2rem;
-}
+/* #sidebar * + * { */
+/*   margin-top: 2rem; */
+/* } */
 
 .hide {
    position: absolute;
