@@ -2,16 +2,17 @@ import Schema from "../db/schema.js"
 const MapSchema = Schema.MapSchema
 let count = 0
 export default class Map {
-  constructor(id,mapObjects,hole) {
+  constructor(id,mapObjects,hole, spawnPoints) {
     this.id = id
     this.mapObjects = mapObjects
     this.hole = hole
+    this.spawnPoints = spawnPoints
 
     Map.all[this.id] = this
   }
 
   pushToDB(){
-    const newMap = new MapSchema({mapObjects: this.mapObjects, hole: this.hole})
+    const newMap = new MapSchema({mapObjects: this.mapObjects, hole: this.hole, spawnPoints: this.spawnPoints})
     newMap.save((err)=>{
       if(err) throw err
     })
@@ -28,7 +29,7 @@ Map.getRandomMap = async function(){
 }
 
 Map.unpackFromDB = function(newMap){ 
-  return new Map(newMap._id, newMap.mapObjects, newMap.hole)
+  return new Map(newMap._id, newMap.mapObjects, newMap.hole, newMap.spawnPoints)
 }
 
 

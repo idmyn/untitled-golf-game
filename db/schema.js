@@ -8,7 +8,8 @@ const userScehma = new Schema({
 
 const mapSchema = new Schema({
   mapObjects: Array,
-  hole: Object
+  hole: Object,
+  spawnPoints: Array
 })
 
 const User = mongoose.model('User', userScehma)
