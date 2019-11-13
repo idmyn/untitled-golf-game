@@ -25,19 +25,23 @@ function displayMessage(message){
 }
 ///////////////////////////////////////////////////////////////////
 
-socket.on('initPlayer', (packet) => {
-  packet.messages.forEach(message => displayMessage(message))
-
+function clearPlayerInfo() {
   const playerInfo = document.querySelector('#player-info')
-  // clear any previous player info still hanging around
   while (playerInfo.firstChild) {
     playerInfo.removeChild(playerInfo.firstChild)
   }
+}
+
+socket.on('initPlayer', (packet) => {
+  packet.messages.forEach(message => displayMessage(message))
+
+  // clear any previous player info still hanging around
+  clearPlayerInfo()
 
   const playerLabel = document.createElement('h2')
   playerLabel.id = 'playerName'
   playerLabel.textContent = `You are player ${packet.playerId}`
-  playerInfo.append(playerLabel)
+  document.querySelector('#player-info').append(playerLabel)
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots`
@@ -137,8 +141,10 @@ socket.on('gameWon', (packet)=>{
   const button = document.createElement('button')
   button.id = 'playAgain'
   button.textContent = 'Join new game'
-  button.addEventListener('click', (e) => {
+  button.addEventListener('click', () => {
     socket.emit('playAgain')
+    // should there be a new socket listener for newGameStart?
+    clearPlayerInfo()
   })
 
   document.body.append(ul, button)
