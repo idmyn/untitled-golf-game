@@ -28,10 +28,16 @@ function displayMessage(message){
 socket.on('initPlayer', (packet) => {
   packet.messages.forEach(message => displayMessage(message))
 
+  const playerInfo = document.querySelector('#player-info')
+  // clear any previous player info still hanging around
+  while (playerInfo.firstChild) {
+    playerInfo.removeChild(playerInfo.firstChild)
+  }
+
   const playerLabel = document.createElement('h2')
   playerLabel.id = 'playerName'
   playerLabel.textContent = `You are player ${packet.playerId}`
-  document.querySelector('#player-info').append(playerLabel)
+  playerInfo.append(playerLabel)
 
   const shotCount = document.createElement('h2')
   shotCount.textContent = `You have taken 0 shots`
