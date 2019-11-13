@@ -1,5 +1,3 @@
-
-
 import Player from "./player.js";
 import Map from "./map.js";
 import Matter from "matter-js/build/matter.js";
@@ -12,16 +10,20 @@ const Engine = Matter.Engine,
   Body = Matter.Body,
   Vector = Matter.Vector
 
-export default function Game() {
-  this.id = count
-  this.initialize = () => {
+export default class Game {
+  constructor() {
+    this.id = count
+    Game.all[this.id] = this
+    count++
+  }
+  initialize(){
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
     const engine = Engine.create()
     this.world = engine.world
     this.world.gravity.y = 0
     this.players = []
     this.messages = []
-    
+
 
 
     Engine.run(engine)
@@ -44,13 +46,13 @@ export default function Game() {
     // }
   }
 
-  this.run = () => {
-   
+  run(){
+
     this.gameTickId = setInterval(() => {
       this.checkIfWon()
       const pack = []
       this.players.forEach((player) =>{
-        
+
         if(!player.potted){
           const ballPos = player.ball.position
           const shots = player.shots
@@ -75,7 +77,7 @@ export default function Game() {
     }
   }
 
-  this.checkIfWon = function(){
+  checkIfWon(){
     if(this.players.length > 0){
       this.players.every(player => player.potted === true) && this.finish()
     }else{
@@ -83,21 +85,21 @@ export default function Game() {
     }
   }
 
-  this.createBall = () => {
+  createBall() {
     const ball = Bodies.circle(300, 300, 15)
     ball.frictionAir = 0.03
     World.add(this.world, ball)
     return ball
   }
 
-  this.createRect = (mapObject) => {
+  createRect(mapObject) {
     const rect = Bodies.rectangle(mapObject.x + mapObject.width/2, mapObject.y+mapObject.height/2, mapObject.width, mapObject.height, {isStatic: true})
     rect.restitution = 0.6
     World.add(this.world, rect)
     return rect
   }
 
-  this.mouseClicked = function(ball, mousePosition){
+  mouseClicked(ball, mousePosition){
     const distance = distanceBetween(ball.position, mousePosition)
     const angle = Vector.angle(ball.position, mousePosition)
     const forceMultiplier = distance / 50 + 1
@@ -109,8 +111,7 @@ export default function Game() {
     })
   }
 
-  this.initMap =function(){
-
+  initMap() {
     const hole = this.map.hole
     this.holePos = {x:hole.x,y:hole.y}
     this.holeRadius = hole.radius
@@ -122,7 +123,7 @@ export default function Game() {
 
   }
 
-  this.checkIfPotted = function(player) {
+  checkIfPotted(player) {
     if(distanceBetween(player.ball.position, this.holePos) < this.holeRadius && player.ball.speed < 3){
       World.remove(this.world, player.ball)
       player.potted = true
@@ -130,7 +131,7 @@ export default function Game() {
     }
   }
 
-  this.finish = function() {
+  finish() {
     clearInterval(this.gameTickId)
     console.log('finished!!!!!')
 
@@ -147,20 +148,18 @@ export default function Game() {
   }
 
 
-  this.sendMessage = function(message){
+  sendMessage(message){
     this.messages.push(message)
     this.players.forEach(player => {
       player.sendMessage(message)
     })
   }
 
-  this.removePlayer = function(curPlayer){
+  removePlayer(curPlayer){
     this.players = this.players.filter(player => player != curPlayer)
     World.remove(this.world, curPlayer.ball)
     delete Player.all[curPlayer.id] // Are we deleting the instance
   }
-  Game.all[this.id] = this
-  count++
 }
 
 Game.all = {}
