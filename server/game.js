@@ -75,7 +75,11 @@ function Game() {
   }
 
   this.checkIfWon = function(){
-    this.players.every(player => player.potted === true) && this.finish()
+    if(this.players.length > 0){
+      this.players.every(player => player.potted === true) && this.finish()
+    }else{
+      delete Game.all[this.id]
+    }
   }
 
   this.createBall = () => {
