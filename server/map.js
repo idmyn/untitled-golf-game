@@ -1,13 +1,14 @@
-import MapObject from "./mapObject.js";
-
+import MapObject from "./mapObject.js"
 
 let count = 0
-export default function Map(){
-  this.id = count
-  this.mapObjects = []
+export default class Map {
+  constructor() {
+    this.id = count
+    this.mapObjects = []
 
-  Map.all[this.id] = this
-  count++
+    Map.all[this.id] = this
+    count++
+  }
 }
 
 Map.all = {}
@@ -23,6 +24,3 @@ Map.map1 = function(){
   testMap.hole =  {x:200,y:50,radius:20}
   return testMap
 }
-
-
-
