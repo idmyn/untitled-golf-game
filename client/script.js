@@ -143,8 +143,6 @@ socket.on('gameWon', (packet)=>{
   button.textContent = 'Join new game'
   button.addEventListener('click', () => {
     socket.emit('playAgain')
-    // should there be a new socket listener for newGameStart?
-    clearPlayerInfo()
   })
 
   document.body.append(ul, button)
