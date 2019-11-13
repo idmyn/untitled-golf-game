@@ -103,10 +103,13 @@ socket.on('playerPots', () => {} )
 
 canvas.addEventListener('click', (e) => {
   // https://stackoverflow.com/a/17130415
-  const rect = canvas.getBoundingClientRect()
+  const rect = canvas.getBoundingClientRect(), // abs. size of element
+    scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+    scaleY = canvas.height / rect.height  // relationship bitmap vs. element for Y
+
   const mouseClickPos = {
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top
+    x: (e.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+    y: (e.clientY - rect.top) * scaleY     // been adjusted to be relative to element
   }
 
   socket.emit('mouseClick', mouseClickPos)
