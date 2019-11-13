@@ -1,8 +1,9 @@
-module.exports = Game
 
-const Player = require('./player')
-const Map = require('./map')
-const Matter = require('matter-js/build/matter.js')
+
+import Player from "./player.js";
+import Map from "./map.js";
+import Matter from "matter-js/build/matter.js";
+
 let count = 0
 
 const Engine = Matter.Engine,
@@ -11,7 +12,7 @@ const Engine = Matter.Engine,
   Body = Matter.Body,
   Vector = Matter.Vector
 
-function Game() {
+export default function Game() {
   this.id = count
   this.initialize = () => {
     global.window = {} // https://github.com/liabru/matter-js/issues/101#issuecomment-161618366
@@ -25,11 +26,11 @@ function Game() {
 
     Engine.run(engine)
 
-    const static = {isStatic: true}
-    const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, static),
-      bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, static),
-      leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, static),
-      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, static)
+    const staticObj = {isStatic: true}
+    const topWall = Bodies.rectangle(400 / 2, 0 - 25, 400, 50, staticObj),
+      bottomWall = Bodies.rectangle(400 / 2, 600 + 25, 400, 50, staticObj),
+      leftWall = Bodies.rectangle(0 - 25, 600 / 2, 50, 600, staticObj),
+      rightWall = Bodies.rectangle(400 + 25, 600 / 2, 50, 600, staticObj)
 
     const bodies = [topWall, bottomWall, leftWall, rightWall]
     bodies.forEach(body => body.restitution = 0.6)

@@ -1,16 +1,21 @@
-module.exports = MapObject
+
 let count = 0
 
-function MapObject(x,y,width, height){
-  this.id = count
-  this.x = x
-  this.y = y
-  this.width = width
-  this.height = height
+export default class MapObject{
+  constructor(x,y,width, height){
+    this.id = count
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height  
 
-  count++
+    count++
+  }
 
-  this.addToMap = function(map){
+
+  
+
+  addToMap(map) {
     map.mapObjects.push(this)
   }
 }

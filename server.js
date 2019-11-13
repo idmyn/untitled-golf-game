@@ -1,19 +1,26 @@
-const express = require('express')
+import express from 'express'
 const app = express()
-const http = require('http').createServer(app)
-const db = require('./db/database')
+import http from 'http'
+const server = http.createServer(app)
+import db from './db/database.js'
 app.use('/client', express.static('client'))
 
-http.listen(3000, function() {
+import path from 'path'
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+
+server.listen(3000, function() {
   console.log('listening on *:3000')
 })
 
-const io = require('socket.io')(http)
+import socketio from 'socket.io'
+
+const io = socketio(server)
 
 db()
 
-const Player = require('./server/player')
-const Game = require('./server/game')
+import Player from './server/player.js'
+import Game from './server/game.js'
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html')

@@ -1,12 +1,12 @@
-module.exports = Player
+
 //temp
-const User = require('../db/schema')
-const Game = require('./game')
+import User from "../db/schema.js";
+import Game from "./game.js";
 
 
 let count = 0
 
-function Player(socket, gameId, ball) {
+export default function Player(socket, gameId, ball) {
   this.id = count
   this.socket = socket
   this.gameId = gameId

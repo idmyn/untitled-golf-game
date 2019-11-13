@@ -1,13 +1,13 @@
 
 //require mongoose module
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 
 //require database URL from properties file
 const dbURL = 'mongodb://localhost:27017/golf'
 
 //export this function and imported by server.js
-module.exports =function(){
+export default function(){
 
   mongoose.connect(dbURL)
 

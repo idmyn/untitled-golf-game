@@ -1,8 +1,8 @@
-const MapObject = require('./mapObject')
-module.exports = Map
+import MapObject from "./mapObject.js";
+
 
 let count = 0
-function Map(){
+export default function Map(){
   this.id = count
   this.mapObjects = []
 
