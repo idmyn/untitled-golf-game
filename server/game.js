@@ -92,7 +92,7 @@ export default class Game {
     const spawnPoint = this.map.spawnPoints[0]
     this.map.spawnPoints.shift()
     this.map.spawnPoints.push(spawnPoint)
-    
+
     console.log(this.map.spawnPoints)
     const ball = Bodies.circle(spawnPoint.x, spawnPoint.y, 15)
     ball.frictionAir = 0.03
@@ -209,11 +209,6 @@ Game.all = {}
 const distanceBetween = (vectorA, vectorB) => {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
-}
-
-const randomElement = (array) => { // being declared in map aswell, add to prototype if possible in nodejs
-  const rand = Math.floor(Math.random() * array.length)
-  return array[rand]
 }
 
 const validMessage = (message) => {
