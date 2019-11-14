@@ -53,8 +53,7 @@ export default class Player {
       if (user) {
         const playerShots = this.shots
         const gameMap = game.map.id
-        const newStats = user.stats
-        newStats.push({[gameMap]: playerShots})
+        const newStats = {[gameMap]: playerShots}
 
         User.findByIdAndUpdate(user._id, { $push: { stats: newStats } }, (err) => {
           if (err) throw err
@@ -95,12 +94,13 @@ export default class Player {
     })
 
     socket.on('login', (name) => {
+      const validation = validateName(name)
       const player = Player.getPlayerBySocketId(socket.id)
 
+      if(validation === true){
       User.find({name: name}, (err, user) => {
-        if (err) throw err
-
-        if (user.length > 0) {
+        if(err) throw err
+        if(user.length > 0){
           player.name = user[0].name
           socket.emit('successfulLogin', {
             name: player.name
@@ -116,7 +116,11 @@ export default class Player {
             })
           })
         }
-      })
+      }) 
+    } else {
+      socket.emit('loginError', `ERROR: ${validation}`)
+      
+    }
     })
 
     return player
@@ -130,3 +134,7 @@ export default class Player {
 }
 
 Player.all = {}
+
+const validateName = (name) => {
+  return name.length > 0 && name.length <= 10 ? true : "Usernames must be between 1 and 10 characters long!"
+}
