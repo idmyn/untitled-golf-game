@@ -167,7 +167,11 @@ Game.findOrCreateGame = async function() {
   if (Object.keys(this.all).length) {
     for (const gameId in this.all) {
       // check if game is full?
+      if(this.all[gameId].players.length < 4){
       return this.all[gameId]
+      }else{
+        return await this.newGame()
+      }
     }
   } else {
     return await this.newGame()
