@@ -157,6 +157,10 @@ socket.on('successfulLogin', (packet) => {
   document.querySelector('form').remove()
 })
 
+socket.on('loginError', (packet) => {
+  alert(packet)
+})
+
 
 socket.on('gameWon', (packet)=>{
   document.querySelector('main').classList.add('hide')

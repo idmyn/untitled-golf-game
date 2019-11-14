@@ -97,12 +97,14 @@ export default class Player {
     })
   
     socket.on('login', (name) => {
+      const validation = validateName(name)
       const player = Player.getPlayerBySocketId(socket.id)
-  
+
+      if(validation === true){
       User.find({name: name}, (err, user) => {
         if(err) throw err
   
-        if(user.length > 0) {
+        if(user.length > 0){
           player.name = user[0].name
           socket.emit('successfulLogin', {
             name: player.name
@@ -120,7 +122,11 @@ export default class Player {
             })
           })
         }
-      })
+      }) 
+    } else {
+      socket.emit('loginError', `ERROR: ${validation}`)
+      
+    }
     })
   
     return player
@@ -135,6 +141,10 @@ export default class Player {
 }
 
 Player.all = {}
+
+const validateName = (name) => {
+  return name.length > 0 && name.length <= 10 ? true : "Usernames must be between 1 and 10 characters long!"
+}
 
 
 

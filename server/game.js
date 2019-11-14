@@ -155,12 +155,13 @@ export default class Game {
 
   sendMessages(pack, player){
     const playerName = player.playerName
-    let preparedMessage = `${playerName}: ${pack}`
+    const preparedMessage = `${playerName}: ${pack}`
     const validation = validMessage(pack)
 
-    validation === true ? this.sendPackets('newMessage', preparedMessage) : player.socket.emit('errorMessage', `ERROR: ${validation}`)
+    validation === true 
+      ? [this.sendPackets('newMessage', preparedMessage), this.messages.push(preparedMessage)] 
+      : player.socket.emit('errorMessage', `ERROR: ${validation}`)
 
-    this.messages.push(preparedMessage)
   }
 
   static handleMessage(packet,socketId){
