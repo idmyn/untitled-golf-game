@@ -89,7 +89,11 @@ export default class Game {
   }
 
   createBall() {
-    const spawnPoint = randomElement(this.map.spawnPoints)
+    const spawnPoint = this.map.spawnPoints[0]
+    this.map.spawnPoints.shift()
+    this.map.spawnPoints.push(spawnPoint)
+    
+    console.log(this.map.spawnPoints)
     const ball = Bodies.circle(spawnPoint.x, spawnPoint.y, 15)
     ball.frictionAir = 0.03
     World.add(this.world, ball)
