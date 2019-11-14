@@ -164,18 +164,13 @@ Game.newGame = async function() {
 }
 
 Game.findOrCreateGame = async function() {
-  if (Object.keys(this.all).length) {
     for (const gameId in this.all) {
-      // check if game is full?
-      if(this.all[gameId].players.length < 4){
-      return this.all[gameId]
-      }else{
-        return await this.newGame()
+      const game =this.all[gameId]
+      if(game.players.length < 4){ //4 hard coded player count, could be dynamic?
+        return game
       }
     }
-  } else {
     return await this.newGame()
-  }
 }
 
 Game.handleMessage = function(packet,socketId){
