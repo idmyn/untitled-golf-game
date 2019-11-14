@@ -56,7 +56,7 @@ export default class Game {
               }
             })
           }
-        
+
           const ballPos = player.ball.position
           const shots = player.shots
           const name = player.playerName
@@ -87,7 +87,7 @@ export default class Game {
   }
 
   createBall() {
-    const spawnPoint = randomElement(this.map.spawnPoints) 
+    const spawnPoint = randomElement(this.map.spawnPoints)
     const ball = Bodies.circle(spawnPoint.x, spawnPoint.y, 15)
     ball.frictionAir = 0.03
     World.add(this.world, ball)
@@ -95,7 +95,13 @@ export default class Game {
   }
 
   createRect(mapObject) {
-    const rect = Bodies.rectangle(mapObject.x + mapObject.width/2, mapObject.y+mapObject.height/2, mapObject.width, mapObject.height, {isStatic: true})
+    const rect = Bodies.rectangle(
+      mapObject.x + mapObject.width / 2,
+      mapObject.y + mapObject.height / 2,
+      mapObject.width,
+      mapObject.height,
+      {isStatic: true})
+
     rect.restitution = 0.6
     World.add(this.world, rect)
     return rect
@@ -104,7 +110,7 @@ export default class Game {
   mouseClicked(ball, mousePosition, boost){
     const distance = distanceBetween(ball.position, mousePosition)
     const angle = Vector.angle(ball.position, mousePosition)
-    const forceMultiplier = boost ? distance / 50 + 100 : distance / 50 + 1 
+    const forceMultiplier = boost ? distance / 50 + 100 : distance / 50 + 1
     const force = 0.005 * forceMultiplier > 0.1 ? 0.1 : 0.005 * forceMultiplier
     // https://stackoverflow.com/a/45118761
     Body.applyForce(ball, ball.position, {
@@ -169,7 +175,7 @@ export default class Game {
 
   static async newGame() {
     const respMaps = await Map.getRandomMap()
-  
+
     const game = new Game()
     game.map = respMaps
     game.initialize()
@@ -180,14 +186,13 @@ export default class Game {
 
   static async findOrCreateGame() {
     for (const gameId in this.all) {
-      const game =this.all[gameId]
-      if(game.players.length < 4){ //4 hard coded player count, could be dynamic?
+      const game = this.all[gameId]
+      if (game.players.length < 4) { //4 hard coded player count, could be dynamic?
         return game
       }
     }
     return await this.newGame()
-}
-
+  }
 }
 
 Game.all = {}
@@ -203,5 +208,5 @@ const randomElement = (array) => { // being declared in map aswell, add to proto
 }
 
 const roundToNum = (numToRound, numToLimit) => {
-  return Math.round(numToRound/numToLimit) * numToLimit
+  return Math.round(numToRound / numToLimit) * numToLimit
 }
