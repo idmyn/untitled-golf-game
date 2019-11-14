@@ -31,9 +31,19 @@ ul {
 }
 
 #chatbox-messages {
-    height: 300px;
+    height: 350px;
     width: 350px;
     overflow-y: scroll;
+
+    padding: 0.5rem;
+    border-color: rgb(222, 226, 230);
+    border-radius: .25rem;
+    border: 1px solid;
+}
+
+#chatbox-messages li {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
 }
 
 #scoreboard {

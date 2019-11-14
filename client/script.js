@@ -25,7 +25,6 @@ function displayMessage(message){
   const newMessage = document.createElement('li')
   newMessage.innerText = message
   chatBoxMessages.append(newMessage)
-  // scroll to the bottom of #chatbox-messages
   chatBoxMessages.scrollTo(0, chatBoxMessages.scrollHeight)
 }
 
