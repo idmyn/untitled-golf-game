@@ -76,7 +76,7 @@ export default class Game {
   }
 
   createBall() {
-    const spawnPoint = randomElement(this.map.spawnPoints) 
+    const spawnPoint = randomElement(this.map.spawnPoints)
     const ball = Bodies.circle(spawnPoint.x, spawnPoint.y, 15)
     ball.frictionAir = 0.03
     World.add(this.world, ball)
@@ -84,7 +84,13 @@ export default class Game {
   }
 
   createRect(mapObject) {
-    const rect = Bodies.rectangle(mapObject.x + mapObject.width/2, mapObject.y+mapObject.height/2, mapObject.width, mapObject.height, {isStatic: true})
+    const rect = Bodies.rectangle(
+      mapObject.x + mapObject.width / 2,
+      mapObject.y + mapObject.height / 2,
+      mapObject.width,
+      mapObject.height,
+      {isStatic: true})
+
     rect.restitution = 0.6
     World.add(this.world, rect)
     return rect
@@ -158,7 +164,7 @@ export default class Game {
 
   static async newGame() {
     const respMaps = await Map.getRandomMap()
-  
+
     const game = new Game()
     game.map = respMaps
     game.initialize()
@@ -169,14 +175,13 @@ export default class Game {
 
   static async findOrCreateGame() {
     for (const gameId in this.all) {
-      const game =this.all[gameId]
-      if(game.players.length < 4){ //4 hard coded player count, could be dynamic?
+      const game = this.all[gameId]
+      if (game.players.length < 4) { //4 hard coded player count, could be dynamic?
         return game
       }
     }
     return await this.newGame()
-}
-
+  }
 }
 
 Game.all = {}
