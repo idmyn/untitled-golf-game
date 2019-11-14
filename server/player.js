@@ -1,6 +1,7 @@
 //temp
-import User from "../db/schema.js";
-import Game from "./game.js";
+import Schema from "../db/schema.js"
+import Game from "./game.js"
+const User = Schema.User
 
 let count = 0
 
@@ -24,8 +25,8 @@ export default class Player {
     return this.name ? this.name : this.id
   }
 
-  joinGame() {
-    const game = Game.findOrCreateGame()
+  async joinGame() {
+    const game = await Game.findOrCreateGame()
     this.gameId = game.id
     this.ball = game.createBall()
 
@@ -41,6 +42,26 @@ export default class Player {
 
   disconnect() {
     delete Player.all[this.id]
+  }
+
+  persistStats(game){
+    const playerName = this.playerName
+  
+    User.findOne({name: playerName}, (err, user)=>{
+      if(err) throw err
+      
+      if(user){
+        const playerShots = this.shots
+        const gameMap = game.map.id
+        const newStats = user.stats
+        newStats.push({[gameMap]: playerShots})
+        
+        User.findByIdAndUpdate(user._id, { $push: { stats: newStats }},(err)=>{
+          if(err) throw err
+        })
+      }
+    })
+
   }
 }
 

@@ -76,7 +76,8 @@ export default class Game {
   }
 
   createBall() {
-    const ball = Bodies.circle(300, 300, 15)
+    const spawnPoint = randomElement(this.map.spawnPoints) 
+    const ball = Bodies.circle(spawnPoint.x, spawnPoint.y, 15)
     ball.frictionAir = 0.03
     World.add(this.world, ball)
     return ball
@@ -116,8 +117,9 @@ export default class Game {
     if (distanceBetween(player.ball.position, this.holePos) < this.holeRadius
         && player.ball.speed < 3) {
       World.remove(this.world, player.ball)
+      const playerName = player.playerName
       player.potted = true
-      // player.socket.emit('playerPots', {})
+      this.sendPackets('playerPots', {[playerName]: player.shots})
     }
   }
 
@@ -126,6 +128,7 @@ export default class Game {
 
     const pack = {}
     this.players.forEach(player => {
+      player.persistStats(this)
       pack[player.playerName] = {shots: player.shots}
     })
 
@@ -150,25 +153,25 @@ export default class Game {
 
 Game.all = {}
 
-Game.newGame = function() {
+Game.newGame = async function() {
+  const respMaps = await Map.getRandomMap()
+
   const game = new Game()
-  const map = Map.map1()
-  game.map = map
+  game.map = respMaps
   game.initialize()
   game.run()
   game.initMap()
   return game
 }
 
-Game.findOrCreateGame = function() {
-  if (Object.keys(this.all).length) {
+Game.findOrCreateGame = async function() {
     for (const gameId in this.all) {
-      // check if game is full?
-      return this.all[gameId]
+      const game =this.all[gameId]
+      if(game.players.length < 4){ //4 hard coded player count, could be dynamic?
+        return game
+      }
     }
-  } else {
-    return this.newGame()
-  }
+    return await this.newGame()
 }
 
 Game.handleMessage = function(packet,socketId){
@@ -180,4 +183,9 @@ Game.handleMessage = function(packet,socketId){
 const distanceBetween = (vectorA, vectorB) => {
   // Pythagorean theorem time
   return Math.sqrt(Math.pow(vectorA.x - vectorB.x, 2) + Math.pow(vectorA.y - vectorB.y, 2))
+}
+
+const randomElement = (array) => { // being declared in map aswell, add to prototype if possible in nodejs
+  const rand = Math.floor(Math.random() * array.length)
+  return array[rand]
 }
