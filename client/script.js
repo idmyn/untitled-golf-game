@@ -2,28 +2,25 @@ const socket = io()
 let mapObjects
 let mapHole
 
-///////////////////////////////////////////////////////////////////
-//chatbox
 const chatBoxForm = document.querySelector('#chatbox-form')
 const chatBoxMessages = document.querySelector('#chatbox-messages')
 
-chatBoxForm.onsubmit= (e) => {
+chatBoxForm.onsubmit = (e) => {
   e.preventDefault()
   const message = e.target.querySelector('input[name="message"]').value
   e.target.querySelector('input[name="message"').value = ''
   socket.emit('newMessage', message)
 }
 
-socket.on('newMessage', (pack) =>{
+socket.on('newMessage', (pack) => {
   displayMessage(pack)
 })
 
-function displayMessage(message){
+function displayMessage(message) {
   const newMessage = document.createElement('li')
   newMessage.innerText = message
   chatBoxMessages.append(newMessage)
 }
-///////////////////////////////////////////////////////////////////
 
 function clearPlayerInfo() {
   const playerName = document.querySelector('#player-name')
@@ -57,7 +54,7 @@ socket.on('initPlayer', (packet) => {
   mapHole = packet.hole
 })
 
-function drawMap(){
+function drawMap() {
   ctx.beginPath()
   ctx.arc(mapHole.x, mapHole.y, mapHole.radius, 0, 2*Math.PI)
   ctx.fillStyle = 'black'
@@ -78,7 +75,7 @@ function drawMap(){
 const canvas = document.querySelector('#game')
 const ctx = canvas.getContext('2d')
 
-socket.on('ballPositions', (pack)=> {
+socket.on('ballPositions', (pack) => {
   ctx.clearRect(0, 0, 400, 600)
   //draw hole
   drawMap()
@@ -101,15 +98,15 @@ socket.on('ballPositions', (pack)=> {
     playerShotsH2.innerText = playerShots === 1
       ? `You have taken ${playerShots} shot`
       : `You have taken ${playerShots} shots`
-
   })
 })
 
 /socket.on('playerPots', (pack) => {
   const playerName = Object.keys(pack)[0]
-  const message = pack[playerName] === 1 
-  ? `${playerName} has finished in ${pack[playerName]} shot`
-  : `${playerName} has finished in ${pack[playerName]} shots`
+  const message = (pack[playerName] === 1)
+    ? `${playerName} has finished in ${pack[playerName]} shot`
+    : `${playerName} has finished in ${pack[playerName]} shots`
+
   displayMessage(message)
 } )
 
@@ -140,7 +137,6 @@ socket.on('successfulLogin', (packet) => {
   document.querySelector('#playerName').textContent = newPlayerName
   document.querySelector('form').remove()
 })
-
 
 socket.on('gameWon', (packet)=>{
   document.querySelector('main').classList.add('hide')
