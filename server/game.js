@@ -153,18 +153,20 @@ export default class Game {
     World.remove(this.world, curPlayer.ball)
   }
 
-  sendMessages(pack, playerName){
-    const preparedMessage = `${playerName}: ${pack}`
+  sendMessages(pack, player){
+    const playerName = player.playerName
+    let preparedMessage = `${playerName}: ${pack}`
+    const validation = validMessage(pack)
+
+    validation === true ? this.sendPackets('newMessage', preparedMessage) : player.socket.emit('errorMessage', `ERROR: ${validation}`)
 
     this.messages.push(preparedMessage)
-
-    this.sendPackets('newMessage', preparedMessage)
   }
 
   static handleMessage(packet,socketId){
     const player = Player.getPlayerBySocketId(socketId)
     const game = player.game
-    game.sendMessages(packet, player.playerName)
+    game.sendMessages(packet, player)
   }
 
   static async newGame() {
@@ -202,6 +204,10 @@ const randomElement = (array) => { // being declared in map aswell, add to proto
   return array[rand]
 }
 
-const roundToNum = (numToRound, numToLimit) => {
-  return Math.round(numToRound/numToLimit) * numToLimit
+const validMessage = (message) => {
+  if(message.length === 0 || message.length > 30){
+    return "Messages must be between 1 and 30 characters long!"
+  }else{
+    return true
+  }
 }
