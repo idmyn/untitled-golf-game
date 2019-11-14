@@ -93,7 +93,6 @@ export default class Game {
     this.map.spawnPoints.shift()
     this.map.spawnPoints.push(spawnPoint)
 
-    console.log(this.map.spawnPoints)
     const ball = Bodies.circle(spawnPoint.x, spawnPoint.y, 15)
     ball.frictionAir = 0.03
     World.add(this.world, ball)
