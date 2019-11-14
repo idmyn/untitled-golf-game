@@ -66,7 +66,7 @@ function drawMap() {
   ctx.fillStyle = 'black'
   ctx.fill()
   ctx.lineWidth = 2
-  ctx.strokeStyle = 'grey'
+  ctx.strokeStyle = 'black'
   ctx.stroke()
 
   mapObjects.forEach(mapObject => {
