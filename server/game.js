@@ -149,22 +149,25 @@ export default class Game {
 
     this.sendPackets('newMessage', preparedMessage)
   }
-}
 
-Game.all = {}
+  static handleMessage(packet,socketId){
+    const player = Player.getPlayerBySocketId(socketId)
+    const game = player.game
+    game.sendMessages(packet, player.playerName)
+  }
 
-Game.newGame = async function() {
-  const respMaps = await Map.getRandomMap()
+  static async newGame() {
+    const respMaps = await Map.getRandomMap()
+  
+    const game = new Game()
+    game.map = respMaps
+    game.initialize()
+    game.run()
+    game.initMap()
+    return game
+  }
 
-  const game = new Game()
-  game.map = respMaps
-  game.initialize()
-  game.run()
-  game.initMap()
-  return game
-}
-
-Game.findOrCreateGame = async function() {
+  static async findOrCreateGame() {
     for (const gameId in this.all) {
       const game =this.all[gameId]
       if(game.players.length < 4){ //4 hard coded player count, could be dynamic?
@@ -174,11 +177,9 @@ Game.findOrCreateGame = async function() {
     return await this.newGame()
 }
 
-Game.handleMessage = function(packet,socketId){
-  const player = Player.getPlayerBySocketId(socketId)
-  const game = player.game
-  game.sendMessages(packet, player.playerName)
 }
+
+Game.all = {}
 
 const distanceBetween = (vectorA, vectorB) => {
   // Pythagorean theorem time

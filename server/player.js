@@ -63,69 +63,75 @@ export default class Player {
     })
 
   }
+
+  static getPlayerBySocketId(socketId) {
+    for(const playerId in Player.all){
+      if(Player.all[playerId].socket.id === socketId){
+        return Player.all[playerId]
+      }
+    }
+  }
+
+  static onConnect(socket) {
+    const player = new Player(socket)
+  
+    player.joinGame()
+  
+    socket.on('mouseClick', (packet) => {
+      if (player.ball.speed < 0.1) {
+        player.shots++
+        player.game.mouseClicked(player.ball, packet)
+      }
+    })
+  
+    socket.on('playAgain', () => {
+      const player = Player.getPlayerBySocketId(socket.id)
+  
+      player.reset()
+      player.joinGame()
+    })
+  
+    socket.on('login', (name) => {
+      const player = Player.getPlayerBySocketId(socket.id)
+  
+      User.find({name: name}, (err, user) => {
+        if(err) throw err
+  
+        if(user.length > 0) {
+          player.name = user[0].name
+          socket.emit('successfulLogin', {
+            name: player.name
+          })
+        } else {
+          const playerToSave = new User({
+            name: name
+          })
+  
+          playerToSave.save((err, user) => {
+            if(err) throw err
+            player.name = user.name
+            socket.emit('successfulLogin', {
+              name: player.name
+            })
+          })
+        }
+      })
+    })
+  
+    return player
+  }
+
+  static handleDisconnect(socketId) {
+    const player = this.getPlayerBySocketId(socketId)
+    player.game && player.game.removePlayer(player)
+    player.disconnect()
+  }
+  
 }
 
 Player.all = {}
 
-Player.onConnect = (socket) => {
-  const player = new Player(socket)
 
-  player.joinGame()
 
-  socket.on('mouseClick', (packet) => {
-    if (player.ball.speed < 0.1) {
-      player.shots++
-      player.game.mouseClicked(player.ball, packet)
-    }
-  })
 
-  socket.on('playAgain', () => {
-    const player = Player.getPlayerBySocketId(socket.id)
 
-    player.reset()
-    player.joinGame()
-  })
-
-  socket.on('login', (name) => {
-    const player = Player.getPlayerBySocketId(socket.id)
-
-    User.find({name: name}, (err, user) => {
-      if(err) throw err
-
-      if(user.length > 0) {
-        player.name = user[0].name
-        socket.emit('successfulLogin', {
-          name: player.name
-        })
-      } else {
-        const playerToSave = new User({
-          name: name
-        })
-
-        playerToSave.save((err, user) => {
-          if(err) throw err
-          player.name = user.name
-          socket.emit('successfulLogin', {
-            name: player.name
-          })
-        })
-      }
-    })
-  })
-
-  return player
-}
-
-Player.getPlayerBySocketId = function(socketId) {
-  for(const playerId in Player.all){
-    if(Player.all[playerId].socket.id === socketId){
-      return Player.all[playerId]
-    }
-  }
-}
-
-Player.handleDisconnect = function(socketId) {
-  const player = this.getPlayerBySocketId(socketId)
-  player.game && player.game.removePlayer(player)
-  player.disconnect()
-}

@@ -17,21 +17,21 @@ export default class Map {
       if(err) throw err
     })
   }
-}
 
-Map.all = {}
 
-Map.getRandomMap = async function(){
+static async getRandomMap(){
   const maps = await MapSchema.find((err)=>{
     if(err) throw err
   })
   return this.unpackFromDB(randomElement(maps))
 }
 
-Map.unpackFromDB = function(newMap){ 
+static unpackFromDB(newMap){ 
   return new Map(newMap._id, newMap.mapObjects, newMap.hole, newMap.spawnPoints)
 }
+}
 
+Map.all = {}
 
 const randomElement = (array) => {
   const rand = Math.floor(Math.random() * array.length)
