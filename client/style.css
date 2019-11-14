@@ -55,7 +55,8 @@ ul {
    left: -9999px;
 }
 
-@media (max-width: 576px) {
+/* 992px is the Bootstrap 'large' size */
+@media (max-width: 992px) {
   #chatbox-div {
     display: none
   }
