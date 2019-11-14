@@ -53,8 +53,7 @@ export default class Player {
       if (user) {
         const playerShots = this.shots
         const gameMap = game.map.id
-        const newStats = user.stats
-        newStats.push({[gameMap]: playerShots})
+        const newStats = {[gameMap]: playerShots}
 
         User.findByIdAndUpdate(user._id, { $push: { stats: newStats } }, (err) => {
           if (err) throw err
