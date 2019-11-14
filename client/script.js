@@ -95,7 +95,8 @@ socket.on('ballPositions', (pack) => {
     ctx.fillStyle = colour
     ctx.fill()
     ctx.fillStyle = '#000000'
-    ctx.fillText(`${playerName} - ${playerShots} shots`, ballPos.x - 20, ballPos.y + 25)
+    ctx.font = '15px Rubik'
+    ctx.fillText(`${playerName} - ${playerShots} shots`, ballPos.x - 20, ballPos.y + 30)
     ctx.lineWidth = 2
     ctx.strokeStyle = '#003300'
     ctx.stroke()
