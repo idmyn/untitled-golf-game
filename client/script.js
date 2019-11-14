@@ -16,7 +16,12 @@ socket.on('newMessage', (pack) => {
   displayMessage(pack)
 })
 
-function displayMessage(message) {
+
+socket.on('errorMessage', (pack) =>{
+  displayMessage(pack)
+})
+
+function displayMessage(message){
   const newMessage = document.createElement('li')
   newMessage.innerText = message
   chatBoxMessages.append(newMessage)
@@ -148,6 +153,10 @@ socket.on('successfulLogin', (packet) => {
   const newPlayerName = `user: ${name}`
   document.querySelector('#playerName').textContent = newPlayerName
   document.querySelector('form').remove()
+})
+
+socket.on('loginError', (packet) => {
+  alert(packet)
 })
 
 socket.on('gameWon', (packet)=>{
