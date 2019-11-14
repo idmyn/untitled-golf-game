@@ -37,6 +37,7 @@ function clearPlayerInfo() {
 }
 
 socket.on('initPlayer', (packet) => {
+  chatBoxMessages.innerHTML = ''
   packet.messages.forEach(message => displayMessage(message))
 
   // clear any previous player info still hanging around
@@ -104,7 +105,13 @@ socket.on('ballPositions', (pack)=> {
   })
 })
 
-// socket.on('playerPots', () => {} )
+/socket.on('playerPots', (pack) => {
+  const playerName = Object.keys(pack)[0]
+  const message = pack[playerName] === 1 
+  ? `${playerName} has finished in ${pack[playerName]} shot`
+  : `${playerName} has finished in ${pack[playerName]} shots`
+  displayMessage(message)
+} )
 
 canvas.addEventListener('click', (e) => {
   // https://stackoverflow.com/a/17130415

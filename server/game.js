@@ -117,8 +117,9 @@ export default class Game {
     if (distanceBetween(player.ball.position, this.holePos) < this.holeRadius
         && player.ball.speed < 3) {
       World.remove(this.world, player.ball)
+      const playerName = player.playerName
       player.potted = true
-      // player.socket.emit('playerPots', {})
+      this.sendPackets('playerPots', {[playerName]: player.shots})
     }
   }
 
