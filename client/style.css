@@ -16,13 +16,17 @@ h1 {
   font-size: 2.3rem;
 }
 
+h2 {
+  font-size: 1.9rem;
+}
+
 #game {
   background: green;
 }
 
 canvas {
   display: inline;
-  max-width: 90%;
+  max-width: 85%;
 }
 
 ul {
@@ -35,7 +39,7 @@ ul {
 }
 
 #chatbox-messages {
-    height: 350px;
+    height: 307px;
     width: 330px;
     overflow-y: scroll;
 
