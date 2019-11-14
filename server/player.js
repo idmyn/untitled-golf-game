@@ -6,7 +6,6 @@ const User = Schema.User
 let count = 0
 
 export default class Player {
-
   constructor(socket) {
     this.id = count
     this.socket = socket
@@ -46,18 +45,18 @@ export default class Player {
 
   persistStats(game){
     const playerName = this.playerName
-  
+
     User.findOne({name: playerName}, (err, user)=>{
-      if(err) throw err
-      
-      if(user){
+      if (err) throw err
+
+      if (user) {
         const playerShots = this.shots
         const gameMap = game.map.id
         const newStats = user.stats
         newStats.push({[gameMap]: playerShots})
-        
-        User.findByIdAndUpdate(user._id, { $push: { stats: newStats }},(err)=>{
-          if(err) throw err
+
+        User.findByIdAndUpdate(user._id, { $push: { stats: newStats } }, (err) => {
+          if (err) throw err
         })
       }
     })
@@ -65,8 +64,8 @@ export default class Player {
   }
 
   static getPlayerBySocketId(socketId) {
-    for(const playerId in Player.all){
-      if(Player.all[playerId].socket.id === socketId){
+    for (const playerId in Player.all) {
+      if (Player.all[playerId].socket.id === socketId) {
         return Player.all[playerId]
       }
     }
@@ -74,41 +73,38 @@ export default class Player {
 
   static onConnect(socket) {
     const player = new Player(socket)
-  
+
     player.joinGame()
-  
+
     socket.on('mouseClick', (packet) => {
       if (player.ball.speed < 0.1) {
         player.shots++
         player.game.mouseClicked(player.ball, packet)
       }
     })
-  
+
     socket.on('playAgain', () => {
       const player = Player.getPlayerBySocketId(socket.id)
-  
       player.reset()
       player.joinGame()
     })
-  
+
     socket.on('login', (name) => {
       const player = Player.getPlayerBySocketId(socket.id)
-  
+
       User.find({name: name}, (err, user) => {
-        if(err) throw err
-  
-        if(user.length > 0) {
+        if (err) throw err
+
+        if (user.length > 0) {
           player.name = user[0].name
           socket.emit('successfulLogin', {
             name: player.name
           })
         } else {
-          const playerToSave = new User({
-            name: name
-          })
-  
+          const playerToSave = new User({ name: name })
+
           playerToSave.save((err, user) => {
-            if(err) throw err
+            if (err) throw err
             player.name = user.name
             socket.emit('successfulLogin', {
               name: player.name
@@ -117,7 +113,7 @@ export default class Player {
         }
       })
     })
-  
+
     return player
   }
 
@@ -126,12 +122,6 @@ export default class Player {
     player.game && player.game.removePlayer(player)
     player.disconnect()
   }
-  
 }
 
 Player.all = {}
-
-
-
-
-
