@@ -4,6 +4,7 @@ import Game from "./game.js"
 const User = Schema.User
 
 let count = 0
+const colours =['red','white','yellow','pink','purple','lime','blue','cyan', 'white', 'grey']
 
 export default class Player {
   constructor(socket) {
@@ -12,6 +13,7 @@ export default class Player {
     this.potted = false
     this.shots = 0
     this.boost = false
+    this.colour = randomElement(colours)
 
     Player.all[this.id] = this
     count++
@@ -138,3 +140,9 @@ Player.all = {}
 const validateName = (name) => {
   return name.length > 0 && name.length <= 10 ? true : "Usernames must be between 1 and 10 characters long!"
 }
+
+const randomElement = (array) => {
+  const rand = Math.floor(Math.random() * array.length)
+  return array[rand]
+}
+
