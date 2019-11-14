@@ -65,13 +65,14 @@ function drawMap() {
   ctx.fillStyle = 'black'
   ctx.fill()
   ctx.lineWidth = 2
-  ctx.strokeStyle = '#003300'
+  ctx.strokeStyle = 'grey'
   ctx.stroke()
 
   mapObjects.forEach(mapObject => {
     ctx.beginPath()
     ctx.rect(mapObject.x, mapObject.y, mapObject.width, mapObject.height)
-    ctx.fillStyle = 'black'
+    ctx.fillStyle = 'grey'
+    ctx.strokeStyle = '#003300'
     ctx.fill()
     ctx.stroke()
   })
