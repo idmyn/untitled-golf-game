@@ -1,10 +1,10 @@
 env:
   browser: true
   node: true
-sourceType: module
 extends: 'eslint:recommended'
 parserOptions:
   ecmaVersion: 6
+  sourceType: module
 globals:
   io: readonly
 rules:
