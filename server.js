@@ -10,7 +10,7 @@ db()
 
 const app = express()
 const server = http.createServer(app)
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 const io = socketio(server)
 
 server.listen(3000, () => {
@@ -25,7 +25,6 @@ app.use('/client', express.static('client'))
 
 io.on('connection', (socket) => {
   Player.onConnect(socket)
-
   console.log('a user connected')
 
   socket.on('newMessage', (pack) => {
@@ -34,7 +33,6 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     Player.handleDisconnect(socket.id)
-
     console.log('a user disconnected')
   })
 })
