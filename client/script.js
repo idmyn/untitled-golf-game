@@ -91,9 +91,10 @@ socket.on('ballPositions', (pack) => {
     const ballPos = pack[playerId].ballPos
     const playerShots = pack[playerId].shots
     const playerName = pack[playerId].name
+    const colour = pack[playerId].colour
     ctx.beginPath()
     ctx.arc(ballPos.x, ballPos.y, 15, 0, 2 * Math.PI)
-    ctx.fillStyle = 'white'
+    ctx.fillStyle = colour
     ctx.fill()
     ctx.fillStyle = '#000000'
     ctx.fillText(`${playerName} - ${playerShots} shots`, ballPos.x - 20, ballPos.y + 25)

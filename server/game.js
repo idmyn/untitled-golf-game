@@ -60,11 +60,13 @@ export default class Game {
           const ballPos = player.ball.position
           const shots = player.shots
           const name = player.playerName
+          const colour = player.colour
           pack.push({
             [player.id]: {
               ballPos: ballPos,
               shots: shots,
-              name: name
+              name: name,
+              colour: colour
             }
           })
           this.checkIfPotted(player)
