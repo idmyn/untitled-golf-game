@@ -46,6 +46,14 @@ export default class Player {
     delete Player.all[this.id]
   }
 
+  fetchStats(){
+    User.find({}, (err,users) => {
+      if(err) throw err
+      const preparedUsers = prepareUserStats(users)
+      this.socket.emit('leaderboard', preparedUsers)
+    })
+  }
+
   persistStats(game){
     const playerName = this.playerName
 
@@ -54,11 +62,12 @@ export default class Player {
 
       if (user) {
         const playerShots = this.shots
-        const gameMap = game.map.id
+        const gameMap = game.map.name
         const newStats = {[gameMap]: playerShots}
 
         User.findByIdAndUpdate(user._id, { $push: { stats: newStats } }, (err) => {
           if (err) throw err
+          this.fetchStats()  
         })
       }
     })
@@ -146,3 +155,24 @@ const randomElement = (array) => {
   return array[rand]
 }
 
+const prepareUserStats = (users) => {
+  const stats = []
+  users.forEach((user) => {
+    const gameStats = prepareGameStats(user.stats)
+    const name = user.name
+    const newStat = {
+      [name]: gameStats
+    }
+    stats.push(newStat)
+  })
+  return stats
+}
+
+const prepareGameStats = (games) => {
+  const gameStats = {}
+  games.forEach((game) => {
+    const map = Object.keys(game)
+    gameStats[map] ? gameStats[map].push(game[map]) : gameStats[map] = [game[map]]
+  })
+  return gameStats
+}

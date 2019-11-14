@@ -5,6 +5,7 @@ db()
 
 let count = 0
 Map.map1 = function(){
+    const name = "The 100m Sprint"
     const obj1 = new MapObject(0, 100, 150, 20)
     const obj2 = new MapObject(250, 100, 150, 20)
     
@@ -20,7 +21,7 @@ Map.map1 = function(){
     const spawnPoint3 = {x:250, y:550}
     const spawnPoint4 = {x:350, y:550}
 
-    const testMap = new Map(count,[obj1,obj2,obj3,obj4,obj5],hole, [spawnPoint1, spawnPoint2,spawnPoint3,spawnPoint4])
+    const testMap = new Map(count,[obj1,obj2,obj3,obj4,obj5],hole, [spawnPoint1, spawnPoint2,spawnPoint3,spawnPoint4], name)
     testMap.pushToDB()
   
     count++
@@ -28,6 +29,8 @@ Map.map1 = function(){
   }
 
   Map.map2 = function(){
+    const name = "Battleground"
+
     const obj1 = new MapObject(0, 80, 75, 20)
     const obj2 = new MapObject(325, 80, 75, 20)
     const obj3 = new MapObject(0, 500, 75, 20)
@@ -48,7 +51,7 @@ Map.map1 = function(){
     const spawnPoint4 = {x:375, y:575}
    
     const hole =  {x:200,y:300,radius:20}
-    const testMap = new Map(count,[obj1,obj2,obj3,obj4,obj5,obj6,obj7,obj8,obj9, obj10],hole, [spawnPoint1, spawnPoint2, spawnPoint3, spawnPoint4])
+    const testMap = new Map(count,[obj1,obj2,obj3,obj4,obj5,obj6,obj7,obj8,obj9, obj10],hole, [spawnPoint1, spawnPoint2, spawnPoint3, spawnPoint4],name)
     testMap.pushToDB()
   
     count++

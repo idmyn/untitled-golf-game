@@ -4,6 +4,7 @@ let mapHole
 
 const chatBoxForm = document.querySelector('#chatbox-form')
 const chatBoxMessages = document.querySelector('#chatbox-messages')
+const leaderboard = document.querySelector("#leaderboard")
 
 chatBoxForm.onsubmit = (e) => {
   e.preventDefault()
@@ -190,4 +191,22 @@ socket.on('gameWon', (packet)=>{
   scoreboard.id = 'scoreboard'
   scoreboard.append(h2, ul, button)
   document.querySelector('.container-fluid').append(scoreboard)
+})
+
+socket.on('leaderboard', (pack) => {
+  leaderboard.innerHTML = ''
+  pack.forEach((user) => {
+    const h1 = document.createElement("h1")
+    const userName = Object.keys(user)
+    h1.innerText = `${userName}`
+    leaderboard.append(h1)
+
+    for(const map in user[userName]){ 
+      const h2 = document.createElement('h2')
+      h2.innerText = `${map}: `
+      user[userName][map].forEach((map) => {h2.innerText += `${map} `})
+      leaderboard.append(h2)
+
+    }
+  })
 })
