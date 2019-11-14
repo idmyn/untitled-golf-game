@@ -105,7 +105,7 @@ socket.on('ballPositions', (pack)=> {
   })
 })
 
-/socket.on('playerPots', (pack) => {
+socket.on('playerPots', (pack) => {
   const playerName = Object.keys(pack)[0]
   const message = pack[playerName] === 1 
   ? `${playerName} has finished in ${pack[playerName]} shot`
@@ -125,6 +125,18 @@ canvas.addEventListener('click', (e) => {
   }
 
   socket.emit('mouseClick', mouseClickPos)
+})
+
+document.addEventListener('keydown', (e) => {
+  if(e.keyCode === 16){
+    socket.emit("boost", true)
+  }
+})
+
+document.addEventListener('keyup', (e) =>{
+  if(e.keyCode === 16){
+    socket.emit("boost", false)
+  }
 })
 
 document.querySelector('#login').addEventListener('submit', (e) => {

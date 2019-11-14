@@ -90,11 +90,11 @@ export default class Game {
     return rect
   }
 
-  mouseClicked(ball, mousePosition){
+  mouseClicked(ball, mousePosition, boost){
     const distance = distanceBetween(ball.position, mousePosition)
     const angle = Vector.angle(ball.position, mousePosition)
-    const forceMultiplier = distance / 50 + 1
-    const force = 0.005 * forceMultiplier > 0.05 ? 0.05 : 0.005 * forceMultiplier
+    const forceMultiplier = boost ? distance / 50 + 100 : distance / 50 + 1 
+    const force = 0.005 * forceMultiplier > 0.1 ? 0.1 : 0.005 * forceMultiplier
     // https://stackoverflow.com/a/45118761
     Body.applyForce(ball, ball.position, {
       x: Math.cos(angle) * force,
