@@ -46,6 +46,17 @@ export default class Game {
 
       this.players.forEach((player) => {
         if (!player.potted) {
+          if(player.boosting){
+            const gamePlayers = this.players.filter(gamePlayer => gamePlayer !== player)
+            gamePlayers.forEach(playerToCollide => {
+              const collision = Matter.SAT.collides(player.ball, playerToCollide.ball)
+              if (collision.collided) {
+                player.boosting = false
+                player.shots -= 1
+              }
+            })
+          }
+        
           const ballPos = player.ball.position
           const shots = player.shots
           const name = player.playerName
@@ -189,4 +200,8 @@ const distanceBetween = (vectorA, vectorB) => {
 const randomElement = (array) => { // being declared in map aswell, add to prototype if possible in nodejs
   const rand = Math.floor(Math.random() * array.length)
   return array[rand]
+}
+
+const roundToNum = (numToRound, numToLimit) => {
+  return Math.round(numToRound/numToLimit) * numToLimit
 }

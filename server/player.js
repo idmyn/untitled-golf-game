@@ -80,7 +80,7 @@ export default class Player {
   
     socket.on('mouseClick', (packet) => {
       if (player.ball.speed < 0.1) {
-        player.boost ? player.shots += 2 : player.shots++
+        player.boost ? [player.shots += 2, player.boosting = true] : player.shots++
         player.game.mouseClicked(player.ball, packet, player.boost)
       }
     })
