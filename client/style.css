@@ -79,11 +79,11 @@ ul {
 
 /* 992px is the Bootstrap 'large' size */
 @media (max-width: 992px) {
-  #chatbox-div {
-    display: none
+  h2 {
+    font-size: 1.5rem;
   }
 
-  #username {
-    max-width: 70%
+  #chatbox-div {
+    display: none
   }
 }
