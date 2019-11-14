@@ -30,6 +30,10 @@ ul {
   padding: 0;
 }
 
+#chatbox-form {
+  margin-top: -0.25rem;
+}
+
 #chatbox-messages {
     height: 350px;
     width: 330px;
@@ -44,6 +48,14 @@ ul {
 #chatbox-messages li {
     margin-top: 0.5rem;
     padding-left: 1rem;
+}
+
+#username {
+  width: 255px;
+}
+
+#message {
+  width: 260px;
 }
 
 #scoreboard {
