@@ -1,7 +1,7 @@
 let count = 0
 
-export default class MapObject{
-  constructor(x,y,width, height){
+export default class MapObject {
+  constructor(x,y,width, height) {
     this.id = count
     this.x = x
     this.y = y
