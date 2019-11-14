@@ -1,5 +1,15 @@
+html, body, .container-fluid {
+  height: 100%;
+}
+
 body {
   font-family: 'Rubik', sans-serif;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 h1 {
