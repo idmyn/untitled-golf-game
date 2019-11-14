@@ -65,9 +65,6 @@ function drawMap() {
   ctx.arc(mapHole.x, mapHole.y, mapHole.radius, 0, 2*Math.PI)
   ctx.fillStyle = 'black'
   ctx.fill()
-  ctx.lineWidth = 2
-  ctx.strokeStyle = 'black'
-  ctx.stroke()
 
   mapObjects.forEach(mapObject => {
     ctx.beginPath()
