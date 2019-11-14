@@ -26,7 +26,21 @@ canvas {
 }
 
 ul {
-  list-style: none
+  list-style: none;
+  padding: 0;
+}
+
+#scoreboard {
+  text-align: center;
+  margin-top: -13%;
+}
+
+#scoreboard h2 {
+    font-size: 3rem;
+}
+
+#scoreboard li {
+    font-size: 1.3rem;
 }
 
 .hide {
@@ -38,5 +52,9 @@ ul {
 @media (max-width: 576px) {
   #chatbox-div {
     display: none
+  }
+
+  #username {
+    max-width: 70%
   }
 }

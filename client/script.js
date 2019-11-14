@@ -126,13 +126,13 @@ canvas.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if(e.keyCode === 16){
-    socket.emit("boost", true)
+    socket.emit('boost', true)
   }
 })
 
 document.addEventListener('keyup', (e) =>{
   if(e.keyCode === 16){
-    socket.emit("boost", false)
+    socket.emit('boost', false)
   }
 })
 
@@ -150,18 +150,23 @@ socket.on('successfulLogin', (packet) => {
   document.querySelector('form').remove()
 })
 
-socket.on('gameWon', (packet)=>{
+socket.on('gameWon', (packet) => {
   document.querySelector('main').classList.add('hide')
+
+  const h2 = document.createElement('h2')
+  h2.textContent = 'Scoreboard'
+
   const ul = document.createElement('ul')
   ul.id = 'scorelist'
 
   for (const playerName in packet) {
     const li = document.createElement('li')
-    li.textContent = `${playerName} - ${packet[playerName].shots} shots`
+    li.textContent = `${playerName} took ${packet[playerName].shots} shots`
     ul.append(li)
   }
 
   const button = document.createElement('button')
+  button.classList.add('btn', 'btn-success')
   button.id = 'playAgain'
   button.textContent = 'Join new game'
   button.addEventListener('click', () => {
@@ -171,6 +176,7 @@ socket.on('gameWon', (packet)=>{
   })
 
   const scoreboard = document.createElement('div')
-  scoreboard.append(ul, button)
+  scoreboard.id = 'scoreboard'
+  scoreboard.append(h2, ul, button)
   document.querySelector('.container-fluid').append(scoreboard)
 })

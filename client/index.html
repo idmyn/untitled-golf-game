@@ -19,15 +19,15 @@
           <canvas width="400" height="600" id="game"></canvas>
         </div>
 
-        <div class="col-12 col-lg-5 mt-lg-5" id="sidebar">
+        <div class="col-12 col-lg-5 mt-lg-3" id="sidebar">
           <div class="row justify-content-center justify-content-lg-start">
-            <form id="login" autocomplete="off">
-              <input name="name" placeholder="Enter username" type="text" value=""/>
-              <input type="submit" value="Log in"/>
+            <form class="form-inline" id="login" autocomplete="off">
+              <input class="form-control" id="username" name="name" placeholder="Enter username" type="text" value=""/>
+              <button class="btn btn-secondary ml-1" type="submit" value="Log in">Log in</button>
             </form>
           </div>
 
-          <div id="player-info" class="row my-1 text-center text-lg-left">
+          <div id="player-info" class="row my-lg-5 my-1 text-center text-lg-left">
             <div class="col">
               <div id="player-name" class="row justify-content-center justify-content-lg-start"></div>
               <div id="player-shots" class="row justify-content-center justify-content-lg-start"></div>
@@ -37,9 +37,9 @@
           <div id="chatbox-div" class="row justify-content-center justify-content-lg-start text-center text-lg-left">
             <div class="col px-0 justify-content-center">
               <ul id="chatbox-messages" class="pl-0"></ul>
-              <form id="chatbox-form" autocomplete="off">
-                <input name="message" placeholder="Enter message" />
-                <input type="submit" value="Send"/>
+              <form id="chatbox-form" class="form-inline" autocomplete="off">
+                <input class="form-control" name="message" placeholder="Enter message" />
+                <button class="btn btn-secondary ml-1" type="submit" value="Send">Send</button>
               </form>
             </div>
           </div>
