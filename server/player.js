@@ -12,6 +12,7 @@ export default class Player {
     this.socket = socket
     this.potted = false
     this.shots = 0
+    this.boost = false
 
     Player.all[this.id] = this
     count++
@@ -79,9 +80,13 @@ export default class Player {
   
     socket.on('mouseClick', (packet) => {
       if (player.ball.speed < 0.1) {
-        player.shots++
-        player.game.mouseClicked(player.ball, packet)
+        player.boost ? [player.shots += 2, player.boosting = true] : player.shots++
+        player.game.mouseClicked(player.ball, packet, player.boost)
       }
+    })
+
+    socket.on('boost', (packet) => {
+      player.boost = packet
     })
   
     socket.on('playAgain', () => {
