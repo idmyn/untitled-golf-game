@@ -39,16 +39,16 @@ function clearPlayerInfo() {
   }
 }
 
-socket.on('initPlayer', (packet) => {
+socket.on('initPlayer', (pack) => {
   chatBoxMessages.innerHTML = ''
-  packet.messages.forEach(message => displayMessage(message))
+  pack.messages.forEach(message => displayMessage(message))
 
   // clear any previous player info still hanging around
   clearPlayerInfo()
 
   const playerLabel = document.createElement('h2')
   playerLabel.id = 'playerName'
-  playerLabel.textContent = `You are player ${packet.playerId}`
+  playerLabel.textContent = `You are player ${pack.playerId}`
   document.querySelector('#player-name').append(playerLabel)
 
   const shotCount = document.createElement('h2')
@@ -56,8 +56,8 @@ socket.on('initPlayer', (packet) => {
   shotCount.id = 'shotCount'
   document.querySelector('#player-shots').append(shotCount)
 
-  mapObjects = packet.mapObjects
-  mapHole = packet.hole
+  mapObjects = pack.mapObjects
+  mapHole = pack.hole
 })
 
 function drawMap() {
@@ -149,18 +149,18 @@ document.querySelector('#login').addEventListener('submit', (e) => {
   socket.emit('login', name)
 })
 
-socket.on('successfulLogin', (packet) => {
-  const name = packet.name
+socket.on('successfulLogin', (pack) => {
+  const name = pack.name
   const newPlayerName = `user: ${name}`
   document.querySelector('#playerName').textContent = newPlayerName
   document.querySelector('form').remove()
 })
 
-socket.on('loginError', (packet) => {
-  alert(packet)
+socket.on('loginError', (pack) => {
+  alert(pack)
 })
 
-socket.on('gameWon', (packet)=>{
+socket.on('gameWon', (pack) => {
   document.querySelector('main').classList.add('hide')
 
   const h2 = document.createElement('h2')
@@ -169,9 +169,9 @@ socket.on('gameWon', (packet)=>{
   const ul = document.createElement('ul')
   ul.id = 'scorelist'
 
-  for (const playerName in packet) {
+  for (const playerName in pack) {
     const li = document.createElement('li')
-    li.textContent = `${playerName} took ${packet[playerName].shots} shots`
+    li.textContent = `${playerName} took ${pack[playerName].shots} shots`
     ul.append(li)
   }
 
