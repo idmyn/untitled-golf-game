@@ -9,7 +9,8 @@ const userScehma = new Schema({
 const mapSchema = new Schema({
   mapObjects: Array,
   hole: Object,
-  spawnPoints: Array
+  spawnPoints: Array,
+  name: String
 })
 
 const User = mongoose.model('User', userScehma)
