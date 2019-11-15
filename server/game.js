@@ -178,13 +178,13 @@ export default class Game {
       let message
       switch(command){
         case "stats":
-          message = "Stats"
+          message = "Stats coming soon"
           break
         case "map":
           message = this.map.name
           break
         case "help":
-          message = "Commands: stats, map"
+          message = "Commands: map"
           break
         default:
           message = "Unkown command"
