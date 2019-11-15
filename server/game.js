@@ -52,7 +52,7 @@ export default class Game {
               const collision = Matter.SAT.collides(player.ball, playerToCollide.ball)
               if (collision.collided) {
                 player.boosting = false
-                player.shots -= 1
+                player.shots -= 2
               }
             })
           }
@@ -184,7 +184,7 @@ export default class Game {
           message = this.map.name
           break
         case "help":
-          message = "Commands: map"
+          message = "Commands: map, stats"
           break
         default:
           message = "Unkown command"

@@ -59,4 +59,28 @@ Map.map1 = function(){
     return testMap
   }
 
-  console.log(Map.map1(), Map.map2())
+  Map.map3 = function(){
+    const name = "Tunnel"
+
+    const obj1 = new MapObject(160, 100, 20, 400)
+    const obj2 = new MapObject(220, 100, 20, 400)
+
+    const obj3 = new MapObject(160, 40, 80, 20)
+    const obj4 = new MapObject(160, 540, 80, 20)
+
+    
+
+    const spawnPoint1 = {x:25, y:25}
+    const spawnPoint2 = {x:375, y:25}
+    const spawnPoint3 = {x:25, y:575}
+    const spawnPoint4 = {x:375, y:575}
+   
+    const hole =  {x:200,y:300,radius:20}
+    const testMap = new Map(count,[obj1,obj2,obj3,obj4 ],hole, [spawnPoint1, spawnPoint2, spawnPoint3, spawnPoint4],name)
+    testMap.pushToDB()
+  
+    count++
+    return testMap
+  }
+
+  console.log(Map.map1(), Map.map2(), Map.map3())
