@@ -33,8 +33,14 @@ export default class Player {
     this.ball = game.createBall()
 
     game.players.push(this)
-
-    this.socket.emit('initPlayer', {playerId: this.playerName, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: game.messages})
+    const messages = game.messages.slice()
+    messages.push("\n")
+    messages.push("Instructions:")
+    messages.push("- Click where you want to move!")
+    messages.push("- Hold shift when you click to use boost!")
+    messages.push("- Boosting will count as 2 shots, unless you hit a player, then it will count as 1!")
+    messages.push("\n")
+    this.socket.emit('initPlayer', {playerId: this.playerName, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: messages})
   }
 
   reset() {
