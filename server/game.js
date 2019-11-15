@@ -166,13 +166,32 @@ export default class Game {
 
   sendMessages(pack, player){
     const playerName = player.playerName
+    if(pack[0] !== "/"){
     const preparedMessage = `${playerName}: ${pack}`
     const validation = validMessage(pack)
 
     validation === true 
       ? [this.sendPackets('newMessage', preparedMessage), this.messages.push(preparedMessage)] 
       : player.socket.emit('errorMessage', `ERROR: ${validation}`)
-
+    }else{
+      const command = pack.slice(1)
+      let message
+      switch(command){
+        case "stats":
+          message = "Stats"
+          break
+        case "map":
+          message = this.map.name
+          break
+        case "help":
+          message = "Commands: stats, map"
+          break
+        default:
+          message = "Unkown command"
+          break
+      }
+      this.sendPackets('newMessage', message)
+    }
   }
 
   static handleMessage(packet,socketId){
