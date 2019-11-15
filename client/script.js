@@ -66,6 +66,12 @@ function drawMap() {
   ctx.fillStyle = 'black'
   ctx.fill()
 
+  var img = new Image()
+  img.onload = function() {
+    ctx.drawImage(img, mapHole.x - 1, mapHole.y - 45)
+  }
+  img.src = '/client/flag.svg'
+
   mapObjects.forEach(mapObject => {
     ctx.beginPath()
     ctx.rect(mapObject.x, mapObject.y, mapObject.width, mapObject.height)
