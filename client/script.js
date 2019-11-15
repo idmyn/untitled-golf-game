@@ -16,12 +16,11 @@ socket.on('newMessage', (pack) => {
   displayMessage(pack)
 })
 
-
 socket.on('errorMessage', (pack) =>{
   displayMessage(pack)
 })
 
-function displayMessage(message){
+function displayMessage(message) {
   const newMessage = document.createElement('li')
   newMessage.innerText = message
   chatBoxMessages.append(newMessage)

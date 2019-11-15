@@ -34,11 +34,11 @@ export default class Player {
 
     game.players.push(this)
     const messages = game.messages.slice()
-    messages.push("\n")
+    messages.push("\n\n")
     messages.push("Instructions:")
-    messages.push("- Click where you want to move!")
-    messages.push("- Hold shift when you click to use boost!")
-    messages.push("- Boosting will count as 2 shots, unless you hit a player, then it will count as 1!")
+    messages.push("- Click where you want to move 🕹")
+    messages.push("- Hold shift and click to use boost ⇧")
+    messages.push("- Boosting will count as 2 shots unless you hit a player ⛳️")
     messages.push("\n")
     this.socket.emit('initPlayer', {playerId: this.playerName, hole: game.map.hole, mapObjects: game.map.mapObjects, messages: messages})
   }
@@ -68,7 +68,6 @@ export default class Player {
         })
       }
     })
-
   }
 
   static getPlayerBySocketId(socketId) {
@@ -105,30 +104,29 @@ export default class Player {
       const validation = validateName(name)
       const player = Player.getPlayerBySocketId(socket.id)
 
-      if(validation === true){
-      User.find({name: name}, (err, user) => {
-        if(err) throw err
-        if(user.length > 0){
-          player.name = user[0].name
-          socket.emit('successfulLogin', {
-            name: player.name
-          })
-        } else {
-          const playerToSave = new User({ name: name })
-
-          playerToSave.save((err, user) => {
-            if (err) throw err
-            player.name = user.name
+      if (validation === true) {
+        User.find({name: name}, (err, user) => {
+          if(err) throw err
+          if(user.length > 0) {
+            player.name = user[0].name
             socket.emit('successfulLogin', {
               name: player.name
             })
-          })
-        }
-      }) 
-    } else {
-      socket.emit('loginError', `ERROR: ${validation}`)
-      
-    }
+          } else {
+            const playerToSave = new User({ name: name })
+
+            playerToSave.save((err, user) => {
+              if (err) throw err
+              player.name = user.name
+              socket.emit('successfulLogin', {
+                name: player.name
+              })
+            })
+          }
+        })
+      } else {
+        socket.emit('loginError', `ERROR: ${validation}`)
+      }
     })
 
     return player
@@ -151,4 +149,3 @@ const randomElement = (array) => {
   const rand = Math.floor(Math.random() * array.length)
   return array[rand]
 }
-
