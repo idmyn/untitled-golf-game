@@ -1,7 +1,7 @@
 {
   "name": "golf",
   "version": "1.0.0",
-  "description": "A golf game made for project 3 at FlatIron",
+  "description": "A golf game made for our JavaScript project at Flatiron School",
   "main": "server.js",
   "type": "module",
   "scripts": {
