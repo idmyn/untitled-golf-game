@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "safestart":"node --experimental-modules server.js"
+    "start": "node --experimental-modules server.js",
+    "safestart": "node --experimental-modules server.js",
+    "seed": "node --experimental-modules db/mapSeed.js"
   },
   "repository": {
     "type": "git",
