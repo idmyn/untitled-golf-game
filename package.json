@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/idmyn/golf.git"
+    "url": "git+https://github.com/idmyn/untitled-golf-game.git"
   },
   "author": "Tim Golding, David Mynors",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/idmyn/golf/issues"
+    "url": "https://github.com/idmyn/untitled-golf-game/issues"
   },
-  "homepage": "https://github.com/idmyn/golf#readme",
+  "homepage": "https://github.com/idmyn/untitled-golf-game#readme",
   "dependencies": {
     "async": "^3.1.0",
     "express": "^4.17.1",
