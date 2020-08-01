@@ -25,7 +25,7 @@
     "express": "^4.17.1",
     "matter-js": "^0.14.2",
     "mongoose": "^5.7.10",
-    "nodemon": "^1.19.4",
+    "nodemon": "^2.0.4",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {}
